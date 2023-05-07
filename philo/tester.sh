@@ -27,6 +27,7 @@ RED_BG="\033[41;1m"
 uname -s | grep -qi darwin && os=mac
 uname -s | grep -qi linux && os=linux
 [[ $os != "linux" ]] && echo -e "${ITA}No valgrind testing (uncompatible os)${END}"
+[[ $os != "linux" ]] && [[ $(which timeout ; echo $?) == 1 ]] && echo -e "${ITA}Please install coreutils via homebrew${END}" && exit 1
 
 # -------------------------------------------------------------------------------------------------------------------------------------
 #  NORMINETTE
@@ -139,3 +140,11 @@ if [[ -s stderr1.txt && -s stderr2.txt && -s stderr3.txt && -s stderr4.txt && -s
 	echo -e "${GREEN} ${EXEC_N} wrote on std err (fd 2)${END} "
 fi
 rm -rf stdout*.txt stderr*.txt
+
+
+
+
+# -------------------------------------------------------------------------------------------------------------------------------------
+#  ENDING
+# -------------------------------------------------------------------------------------------------------------------------------------
+make fclean >/dev/null 2>&1
