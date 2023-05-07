@@ -14,8 +14,7 @@
 
 /*	- only digits (except leading '-')
 	- nb < 0 returned to arg_checker are reco as errors
-	- returns -1 if overflow
-*/
+	- returns -1 if overflow	*/
 int	ft_atoi(const char *nptr)
 {
 	int		sign;
@@ -34,6 +33,7 @@ int	ft_atoi(const char *nptr)
 	while (*nptr >= '0' && *nptr <= '9')
 	{
 		if (res < old_res)
+			return (-1);
 		res = res * 10 + (*nptr++ - '0');
 	}
 	return (res * sign);

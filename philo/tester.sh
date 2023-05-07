@@ -52,8 +52,8 @@ echo -n " -- "
 [[ -f $EXEC_N && -x $EXEC_N ]] && echo -e "${GREEN}exec == ${EXEC_N}${END}" || echo -e "${RED}no exec file found named ${EXEC_N}${END}"
 rm -rf stderrmake.txt stdoutmakebis.txt
 
-[[ ! -f ${EXEC_N} ]] && { echo -e "${RED_BG}No exec 'philo'. Tester exiting.${END}" ; make fclean >/dev/null 2>&1 ; exit ; }
-[[ ! -x ${EXEC_N} ]] && { echo -e "${RED_BG}No exec rights on 'philo'. Tester exiting.${END}" ; make fclean >/dev/null 2>&1 ; exit ; }
+[[ ! -f ${EXEC_N} ]] && { echo -e "${RED_BG}No exec ${EXEC_N}. Tester exiting.${END}" ; make fclean >/dev/null 2>&1 ; exit ; }
+[[ ! -x ${EXEC_N} ]] && { echo -e "${RED_BG}No exec rights on ${EXEC_N}. Tester exiting.${END}" ; make fclean >/dev/null 2>&1 ; exit ; }
 
 # -------------------------------------------------------------------------------------------------------------------------------------
 #  ARGUMENTS NUMBER BAD
@@ -67,8 +67,13 @@ echo -ne "${BLU_BG}Test arg nb (<4 && >5):${END} \t\t\t\t\t\t-->"
 if [[ -s no_arg.txt || -s one_arg.txt || -s two_arg.txt || -s three_arg.txt || -s six_arg_.txt ]] ; then
 	echo -ne "${YEL} ${EXEC_N} wrote on std out (fd 1)${END} "
 fi
-if [[ -s no_arg_err.txt || -s one_arg_err.txt || -s two_arg_err.txt || -s three_arg_err.txt || six_arg_err.txt ]] ; then
+if [[ -s no_arg_err.txt && -s one_arg_err.txt && -s two_arg_err.txt && -s three_arg_err.txt && six_arg_err.txt ]] ; then
 	echo -e "${GREEN} ${EXEC_N} wrote on std err (fd 2)${END} "
 fi
 rm -rf *arg*.txt
 
+# -------------------------------------------------------------------------------------------------------------------------------------
+#  ARGUMENTS BAD VALUES (negative + non digit + over/underflows)
+# -------------------------------------------------------------------------------------------------------------------------------------
+
+./${EXEC_N}  >stdout.txt 2> stderr.txt

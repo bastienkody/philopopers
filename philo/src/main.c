@@ -31,12 +31,11 @@ int	arg_checker(int argc, char **argv)
 		}
 		argv++;
 	}
-	return (0);	
+	return (0);
 }
 
 int	main(int argc, char **argv)
 {
 	if (arg_checker(argc, ++argv))
-		return (1);	
+		return (1);
 }
-
