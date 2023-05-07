@@ -9,7 +9,7 @@ SRCS = 	$(addprefix ${SRC_DIR}, ${SRCS_NAME})
 
 OBJS =	${SRCS:.c=.o}
 
-NAME =	philo	
+NAME =	philo
 
 CC =	cc
 
