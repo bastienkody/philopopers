@@ -44,13 +44,12 @@ uname -s | grep -qi linux && os=linux
 # -------------------------------------------------------------------------------------------------------------------------------------
 echo -ne "${BLU_BG}Test norminette:${END} \t\t-->"
 norm=$(find . | egrep ".*(\.c|\.h)$" | norminette)
-if [[ $(echo $norm | egrep -v "OK\!$") ]] ;
+if [[ $(echo "$norm" | egrep -v "OK\!$") ]] ;
 then
-	echo -e "${RED} norme errors:${END}"
-	echo -e $norm | egrep -v "OK\!$"
+	echo -e "${RED} norme errors${END}"
+	#echo -e "$norm" | egrep -v "OK\!$"
 else
 	echo -e "${GREEN} norm ok${END}"
-
 fi
 
 # -------------------------------------------------------------------------------------------------------------------------------------

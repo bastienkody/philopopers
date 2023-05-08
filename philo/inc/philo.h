@@ -20,14 +20,19 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-/* const */
+/* const state */
+# define EAT 0
+# define SLEEP 1
+# define THINK 2
 
 /* typedef */
 typedef struct s_philo
 {
-	int	nb;
-	int	last_meal;
-	int	meal_nb;
+	int					nb;
+	int					state;
+	unsigned long int	th_id;
+	int					last_meal;
+	int					meal_nb;
 }			t_philo;
 
 typedef struct s_data
@@ -46,6 +51,9 @@ t_philo	**init_philo(t_data *data);
 /* free */
 void	free_philo(t_philo **philo);
 void	end_free(t_data *data, t_philo **philo);
+
+/* threading */
+void	launcher(t_philo **philo);
 
 /* utils */
 int		ft_atoi_noverflw(const char *nptr);

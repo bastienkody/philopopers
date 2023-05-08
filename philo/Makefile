@@ -5,6 +5,7 @@ SRC_DIR = ./src/
 SRCS_NAME =	main.c\
 			inits.c\
 			frees.c\
+			threading.c\
 			ft_utils.c\
 			printers_debug.c\
 		
@@ -16,9 +17,11 @@ NAME =	philo
 
 CC =	cc
 
-CFLAGSDEV =	-Wall -Wextra -Werror -g3
+CFLAGSDEV =	-Wall -Wextra -Werror -pthread -g3
 
-CFLAGS =	-Wall -Wextra -Werror
+CFLAGS =	-Wall -Wextra -Werror -pthread
+
+LDFLAGS =	-pthread
 
 .c.o:	
 		@echo "\033[32m\c"

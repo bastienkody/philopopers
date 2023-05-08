@@ -61,6 +61,8 @@ t_philo	**init_philo(t_data *data)
 	t_philo	**philo;
 	int		i;
 
+	if (data->nb_philo == 0)
+		return (NULL);
 	philo = malloc((data->nb_philo + 1) * sizeof(t_philo));
 	if (!philo)
 		return (NULL);

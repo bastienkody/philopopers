@@ -14,8 +14,8 @@
 
 int	main(int argc, char **argv)
 {
-	static t_philo	**philo = NULL;
-	static t_data	*data = NULL;
+	t_philo	**philo;
+	t_data	*data;
 
 	data = arg_to_data(argc, ++argv);
 	if (!data)
@@ -23,7 +23,14 @@ int	main(int argc, char **argv)
 	philo = init_philo(data);
 	if (!philo)
 		return (free(data), 1);
-	//print_data(data);
-	//print_philo(philo);
+	print_data(data);
+	print_philo(philo);
+
+	launcher(philo);
+	usleep(1000);
+// phtread_join instead of usleep in main ?
+
+	print_philo(philo);
+
 	return (end_free(data, philo), 0);
 }

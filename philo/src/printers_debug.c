@@ -16,6 +16,7 @@ void	print_data(t_data *data)
 {
 	if (!data)
 		printf("data is NULL\n");
+	printf("-------------------------\n");
 	printf("\tT_DATA\n");
 	printf("nb_philo = %i\n", data->nb_philo);
 	printf("tt_die = %i\n", data->tt_die);
@@ -32,12 +33,15 @@ void	print_philo(t_philo **philo)
 	if (!philo)
 		printf("philo is NULL\n");
 	i = 0;
+	printf("-------------------------\n");
 	printf("\tT_PHILO\n");
 	while (philo[i])
 	{
-		printf("philo[%i].nb = %i\n", i, philo[i]->nb);
-		//printf("philo[%i].last_meal = %i", i, philo[i]->last_meal);
-		printf("philo[%i].meal_nb = %i\n", i, philo[i]->meal_nb);
+		printf("PHILO %i (i=%i)\n", philo[i]->nb, i);
+		printf(".th_id = %lu\n", philo[i]->th_id);
+		//printf(".last_meal = %i", philo[i]->last_meal);
+		//printf(".state = %i", philo[i]->last_meal);
+		printf(".meal_nb = %i\n", philo[i]->meal_nb);
 		i++;
 	}
 	printf("-------------------------\n");
