@@ -4,6 +4,7 @@ SRC_DIR = ./src/
 
 SRCS_NAME =	main.c\
 			ft_utils.c\
+			printers_debug.c\
 		
 SRCS = 	$(addprefix ${SRC_DIR}, ${SRCS_NAME})
 

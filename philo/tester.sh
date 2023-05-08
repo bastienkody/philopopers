@@ -7,6 +7,16 @@
 #  4 410 200 200	(no die)
 #  4 310 200 100	(1 die)
 
+# eat -> sleep -> think
+
+# argv++ 
+# argv[0] == nb philo
+# argv[1] == time to die
+# argv[2] == time to eat
+# argv[3] == time to sleep
+# argv[4] == nb of meals (optional)
+
+
 # -------------------------------------------------------------------------------------------------------------------------------------
 #  INTRO - CONST
 # -------------------------------------------------------------------------------------------------------------------------------------
@@ -94,6 +104,8 @@ if [[ -s stdout1.txt || -s stdout2.txt || -s stdout3.txt || -s stdout4.txt || -s
 fi
 if [[ -s stderr1.txt && -s stderr2.txt && -s stderr3.txt && -s stderr4.txt && -s stderr5.txt && -s stderr6.txt && -s stderr7.txt && -s stderr8.txt && -s stderr9.txt ]] ; then
 	echo -e "${GREEN} ${EXEC_N} wrote on std err (fd 2)${END} "
+else
+	echo -e "${YEL} ${EXEC_N} did not wrote on std err (fd 2)${END} "
 fi
 rm -rf stdout*.txt stderr*.txt
 
@@ -116,6 +128,8 @@ if [[ -s stdout1.txt || -s stdout2.txt || -s stdout3.txt || -s stdout4.txt || -s
 fi
 if [[ -s stderr1.txt && -s stderr2.txt && -s stderr3.txt && -s stderr4.txt && -s stderr5.txt && -s stderr6.txt && -s stderr7.txt && -s stderr8.txt && -s stderr9.txt ]] ; then
 	echo -e "${GREEN} ${EXEC_N} wrote on std err (fd 2)${END} "
+else
+	echo -e "${YEL} ${EXEC_N} did not wrote on std err (fd 2)${END} "
 fi
 rm -rf stdout*.txt stderr*.txt
 
@@ -138,8 +152,10 @@ if [[ -s stdout1.txt || -s stdout2.txt || -s stdout3.txt || -s stdout4.txt || -s
 fi
 if [[ -s stderr1.txt && -s stderr2.txt && -s stderr3.txt && -s stderr4.txt && -s stderr5.txt && -s stderr6.txt && -s stderr7.txt && -s stderr8.txt && -s stderr9.txt ]] ; then
 	echo -e "${GREEN} ${EXEC_N} wrote on std err (fd 2)${END} "
+else
+	echo -e "${YEL} ${EXEC_N} did not wrote on std err (fd 2)${END} "
 fi
-rm -rf stdout*.txt stderr*.txt
+#rm -rf stdout*.txt stderr*.txt
 
 
 

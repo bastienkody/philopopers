@@ -15,17 +15,16 @@
 /*	- only digits (except leading '-')
 	- nb < 0 returned to arg_checker are reco as errors
 	- returns -1 if overflow	*/
-int	ft_atoi(const char *nptr)
+int	ft_atoi_noverflw(const char *nptr)
 {
 	int		sign;
 	int		res;
 	int		old_res;
 
 	sign = 1;
-	if (*nptr == '+' || *nptr == '-')
+	if (*nptr == '-')
 	{
-		if (*nptr == '-')
-			sign *= -1;
+		sign *= -1;
 		nptr++;
 	}
 	res = 0;

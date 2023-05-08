@@ -22,7 +22,27 @@
 
 /* const */
 
-/* prototypes */
-int	ft_atoi(const char *nptr);
+/* typedef */
+typedef struct s_philo
+{
+	int	nb;
+	int	last_meal;
+	int	meal_nb;
+}			t_philo;
+
+typedef struct s_data
+{
+	int	nb_philo;
+	int	tt_die;
+	int	tt_eat;
+	int	tt_sleep;
+	int	min_meals;
+}			t_data;
+
+/* proto utils */
+int	ft_atoi_noverflw(const char *nptr);
+
+/* proto print-debug */
+void	print_data(t_data *data);
 
 #endif
