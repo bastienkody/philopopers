@@ -50,6 +50,7 @@ then
 	echo -e $norm | egrep -v "OK\!$"
 else
 	echo -e "${GREEN} norm ok${END}"
+
 fi
 
 # -------------------------------------------------------------------------------------------------------------------------------------
@@ -155,7 +156,7 @@ if [[ -s stderr1.txt && -s stderr2.txt && -s stderr3.txt && -s stderr4.txt && -s
 else
 	echo -e "${YEL} ${EXEC_N} did not wrote on std err (fd 2)${END} "
 fi
-#rm -rf stdout*.txt stderr*.txt
+rm -rf stdout*.txt stderr*.txt
 
 
 

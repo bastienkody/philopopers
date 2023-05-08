@@ -39,10 +39,19 @@ typedef struct s_data
 	int	min_meals;
 }			t_data;
 
-/* proto utils */
-int	ft_atoi_noverflw(const char *nptr);
+/* inits */
+t_data	*arg_to_data(int argc, char **argv);
+t_philo	**init_philo(t_data *data);
 
-/* proto print-debug */
+/* free */
+void	free_philo(t_philo **philo);
+void	end_free(t_data *data, t_philo **philo);
+
+/* utils */
+int		ft_atoi_noverflw(const char *nptr);
+
+/* print-debug */
 void	print_data(t_data *data);
+void	print_philo(t_philo **philo);
 
 #endif

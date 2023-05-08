@@ -1,29 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bguillau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/05 15:17:03 by bguillau          #+#    #+#             */
-/*   Updated: 2023/05/05 16:30:35 by bguillau         ###   ########.fr       */
+/*   Created: 2023/05/08 17:08:52 by bguillau          #+#    #+#             */
+/*   Updated: 2023/05/08 17:09:12 by bguillau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-int	main(int argc, char **argv)
+void	free_philo(t_philo **philo)
 {
-	static t_philo	**philo = NULL;
-	static t_data	*data = NULL;
+	int	i;
 
-	data = arg_to_data(argc, ++argv);
-	if (!data)
-		return (1);
-	philo = init_philo(data);
 	if (!philo)
-		return (free(data), 1);
-	//print_data(data);
-	//print_philo(philo);
-	return (end_free(data, philo), 0);
+		return ;
+	i = -1;
+	while (philo[++i])
+		free(philo[i]);
+	free(philo);
+}
+
+void	end_free(t_data *data, t_philo **philo)
+{
+	if (data)
+		free(data);
+	if (philo)
+		free_philo(philo);
 }

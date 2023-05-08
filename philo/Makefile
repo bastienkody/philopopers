@@ -3,6 +3,8 @@ HEADER = ./inc/philo.h
 SRC_DIR = ./src/
 
 SRCS_NAME =	main.c\
+			inits.c\
+			frees.c\
 			ft_utils.c\
 			printers_debug.c\
 		
@@ -20,7 +22,7 @@ CFLAGS =	-Wall -Wextra -Werror
 
 .c.o:	
 		@echo "\033[32m\c"
-		${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+		${CC} ${CFLAGSDEV} -c $< -o ${<:.c=.o}
 		@echo "\033[0m\c"
 
 all:	${NAME}
