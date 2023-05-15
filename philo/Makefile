@@ -6,6 +6,7 @@ SRCS_NAME =	main.c\
 			inits.c\
 			frees.c\
 			threading.c\
+			time_mgmt.c\
 			ft_utils.c\
 			printers_debug.c\
 		

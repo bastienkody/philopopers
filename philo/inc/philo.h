@@ -51,6 +51,7 @@ t_philo	**init_philo(t_data *data);
 /* free */
 void	free_philo(t_philo **philo);
 void	end_free(t_data *data, t_philo **philo);
+void	phcreate_failure_mgmt(t_philo **philo, int i);
 
 /* threading */
 void	launcher(t_philo **philo);

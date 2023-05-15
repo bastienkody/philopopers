@@ -39,14 +39,14 @@ void	phcreate_failure_mgmt(t_philo **philo, int i)
 {
 	int	j;
 
-	printf("phtread_create failed on philo %i. Program exiting\n");
+	printf("phtread_create failed on philo %i. Program exiting\n", i);
 	j = -1;
 	while (philo[++j])
 	{
 		if (philo[j]->t_id)
 		{
 			if (pthread_detach(philo[j]->t_id) != 0)
-				printf("phtread_detach also failed on philo %i...\n");
+				printf("phtread_detach also failed on philo %i...\n", j);
 			philo[j]->t_id = 0;
 		}
 	}
