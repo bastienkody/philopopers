@@ -27,7 +27,7 @@ int	main(int argc, char **argv)
 	//print_philo(philo);
 
 	//launcher(philo);
-	ft_usleep(1);
+	ft_usleep(10000);
 
 	//print_philo(philo);
 	return (end_free(data, philo), 0);
