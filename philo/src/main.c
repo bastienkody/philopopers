@@ -23,11 +23,12 @@ int	main(int argc, char **argv)
 	philo = init_philo(data);
 	if (!philo)
 		return (free(data), 1);
-	print_data(data);
-	print_philo(philo);
+	//print_data(data);
+	//print_philo(philo);
 
-	launcher(philo);
+	//launcher(philo);
+	ft_usleep(1);
 
-	print_philo(philo);
+	//print_philo(philo);
 	return (end_free(data, philo), 0);
 }

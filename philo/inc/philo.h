@@ -59,6 +59,9 @@ void	launcher(t_philo **philo);
 /* utils */
 int		ft_atoi_noverflw(const char *nptr);
 
+/* time */
+void	ft_usleep(unsigned int usec);
+
 /* print-debug */
 void	print_data(t_data *data);
 void	print_philo(t_philo **philo);
