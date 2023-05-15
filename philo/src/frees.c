@@ -31,3 +31,23 @@ void	end_free(t_data *data, t_philo **philo)
 	if (philo)
 		free_philo(philo);
 }
+
+/*	detach all philo
+	set t_id of detach thread to 0
+	philo with t_id of 0 wont be executed in the simulation */
+void	phcreate_failure_mgmt(t_philo **philo, int i)
+{
+	int	j;
+
+	printf("phtread_create failed on philo %i. Program exiting\n");
+	j = -1;
+	while (philo[++j])
+	{
+		if (philo[j]->t_id)
+		{
+			if (pthread_detach(philo[j]->t_id) != 0)
+				printf("phtread_detach also failed on philo %i...\n");
+			philo[j]->t_id = 0;
+		}
+	}
+}
