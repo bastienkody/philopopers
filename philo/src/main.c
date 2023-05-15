@@ -27,10 +27,7 @@ int	main(int argc, char **argv)
 	print_philo(philo);
 
 	launcher(philo);
-	usleep(1000);
-// phtread_join instead of usleep in main ?
 
 	print_philo(philo);
-
 	return (end_free(data, philo), 0);
 }

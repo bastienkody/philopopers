@@ -13,7 +13,7 @@
 #include "../inc/philo.h"
 
 /* default fct to threads */
-void	*do_smthg(void *t)
+void	*do_smthg(void * t)
 {
 	printf("salut from philo %i\n", *(int *)t);
 	return (NULL);
@@ -28,14 +28,22 @@ void	launcher(t_philo **philo)
 	i = -1;
 	while (philo[++i])
 	{
-		thread = 0;
+		//thread = 0;
 		if (pthread_create(&thread, NULL, &do_smthg, &philo[i]->nb))
 			printf("pb creation thread philo %i\n", philo[i]->nb);
 		else
 		{
 			printf("ok creation thread philo %i\n", philo[i]->nb);
-			philo[i]->th_id = thread;
+			philo[i]->t_id = thread;
 		}
+	}
+	i = -1;
+	while (philo[++i])
+	{
+		if (pthread_join(philo[i]->t_id, NULL))
+			printf("pb joining t_id %lu\n", philo[i]->t_id);
+		else
+			printf("joined t_id %lu\n", philo[i]->t_id);
 	}
 	return (printf("launcher returned\n"), (void) 0);
 }

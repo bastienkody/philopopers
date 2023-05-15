@@ -38,7 +38,7 @@ void	print_philo(t_philo **philo)
 	while (philo[i])
 	{
 		printf("PHILO %i (i=%i)\n", philo[i]->nb, i);
-		printf(".th_id = %lu\n", philo[i]->th_id);
+		printf(".th_id = %lu\n", philo[i]->t_id);
 		//printf(".last_meal = %i", philo[i]->last_meal);
 		//printf(".state = %i", philo[i]->last_meal);
 		printf(".meal_nb = %i\n", philo[i]->meal_nb);

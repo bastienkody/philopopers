@@ -30,7 +30,7 @@ typedef struct s_philo
 {
 	int					nb;
 	int					state;
-	unsigned long int	th_id;
+	unsigned long int	t_id;
 	int					last_meal;
 	int					meal_nb;
 }			t_philo;

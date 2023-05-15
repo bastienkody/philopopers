@@ -74,6 +74,7 @@ t_philo	**init_philo(t_data *data)
 			return (free_philo(philo), NULL);
 		philo[i]->nb = i + 1;
 		philo[i]->meal_nb = data->min_meals;
+		philo[i]->t_id = 0;
 	}
 	philo[i] = NULL;
 	return (philo);
