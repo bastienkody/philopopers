@@ -38,3 +38,13 @@ int	ft_atoi_noverflw(const char *nptr)
 	}
 	return (res * sign);
 }
+
+/*	wutex lock + print philo msg
+	printf for now. if too long i'd try itoa + write	*/
+void	ft_printer(unsigned long int time, int philo_nb, char *msg,
+	pthread_mutex_t *wutex)
+{
+	pthread_mutex_lock(wutex);
+	printf("%lu %i %s\n", time, philo_nb, msg);
+	pthread_mutex_unlock(wutex);
+}

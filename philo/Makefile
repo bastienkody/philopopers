@@ -7,6 +7,7 @@ SRCS_NAME =	main.c\
 			frees.c\
 			threading.c\
 			time_mgmt.c\
+			actions.c\
 			ft_utils.c\
 			printers_debug.c\
 		
@@ -45,5 +46,7 @@ fclean:		clean
 		@echo "\033[32m${NAME} fcleaned"
 
 re:		fclean all
+
+nice:	all clean
 
 .PHONY:	all clean re

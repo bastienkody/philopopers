@@ -12,52 +12,71 @@
 
 #include "../inc/philo.h"
 
-/*	mutex : malloc + init	*/
-pthread_mutex_t	**init_mutex(t_data *data)
+/*	fourchettes mutex : malloc + init	*/
+pthread_mutex_t	**init_futex(t_data *data)
 {
-	pthread_mutex_t	**mutexes;
+	pthread_mutex_t	**futex;
 	int				i;
 
 	if (data->nb_philo == 0)
 		return (NULL);
-	mutexes =  malloc((data->nb_philo + 1) * sizeof(pthread_mutex_t));
-	if (!mutexes)
+	futex = malloc((data->nb_philo + 1) * sizeof(pthread_mutex_t));
+	if (!futex)
 		return (NULL);
 	i = -1;
 	while (++i < data->nb_philo)
 	{
-		mutexes[i] = (pthread_mutex_t*) malloc(1 * sizeof(pthread_mutex_t));
-		if (!mutexes[i] || pthread_mutex_init(mutexes[i], NULL))
-			return (free_mutex(mutexes), NULL);
-
+		futex[i] = (pthread_mutex_t *) malloc(1 * sizeof(pthread_mutex_t));
+		if (!futex[i] || pthread_mutex_init(futex[i], NULL))
+			return (free_futex(futex), NULL);
 	}
-	mutexes[i] = NULL;
-	return (mutexes);
+	futex[i] = NULL;
+	return (futex);
 }
 
-/* stores argv in data */
+/*	writing mutex : malloc + init	*/
+pthread_mutex_t	*init_wutex(void)
+{
+	pthread_mutex_t	*wutex;
+
+	wutex = malloc(1 * sizeof(pthread_mutex_t));
+	if (!wutex || pthread_mutex_init(wutex, NULL))
+		return (free(wutex), NULL);
+	return (wutex);
+}
+
+/* stores argv in data
+	set t0 later maybe? */
 t_data	*init_data(char **argv)
 {
-	t_data	*data;
+	t_data			*data;
+	struct timeval	tv;
 
 	data = malloc(1 * sizeof(t_data));
 	if (!data)
 		return (NULL);
+	gettimeofday(&tv, NULL);
+	data->t0 = tv;
 	data->nb_philo = ft_atoi_noverflw(argv[0]);
 	data->tt_die = ft_atoi_noverflw(argv[1]);
 	data->tt_eat = ft_atoi_noverflw(argv[2]);
 	data->tt_sleep = ft_atoi_noverflw(argv[3]);
+	data->tt_think = data->tt_die - data->tt_eat - data->tt_sleep;
+	data->go_on = TRUE;
 	if (argv[4])
 		data->min_meals = ft_atoi_noverflw(argv[4]);
 	else
 		data->min_meals = -1;
-	data->mutexes = init_mutex(data);
-	if (!data->mutexes)
+	data->futex = init_futex(data);
+	if (!data->futex)
 		return (free(data), NULL);
+	data->wutex = init_wutex();
+	if (!data->wutex)
+		return (free_futex(data->futex), free(data), NULL);
 	return (data);
 }
 
-/* checks arg + calls init_data() */
+/* checks arg (++argv dans main) + calls init_data() */
 t_data	*arg_to_data(int argc, char **argv)
 {
 	int		i;
@@ -107,5 +126,3 @@ t_philo	**init_philo(t_data *data)
 	philo[i] = NULL;
 	return (philo);
 }
-
-

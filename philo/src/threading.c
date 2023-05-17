@@ -12,16 +12,21 @@
 
 #include "../inc/philo.h"
 
+/* simulation starts : set t0, gives activity to philo */
 void	*routine(void *phil)
 {
 	t_philo	*philo;
 
-	philo = (t_philo*) phil;
-	printf("salut from philo %i %lu\n", ((t_philo*) philo)->nb, ((t_philo*) philo)->t_id);
-	
-
-
-	return (NULL);
+	philo = (t_philo *) phil;
+	//printf("salut from philo %i\n", ((t_philo *) philo)->nb);
+	//if (!philo->data->t0)
+		//gettimeofday(philo->data->t0, NULL);
+	philo->last_meal = 0;
+	if (!(philo->nb & 1)) //pairs
+		eatp(philo);
+	else 
+		thinkp(philo);
+	return (printf("routine returned philo %i\n", philo->nb), NULL);
 }
 
 void	launcher(t_philo **philo)
@@ -29,6 +34,7 @@ void	launcher(t_philo **philo)
 	pthread_t	thread;
 	int			i;
 
+	
 	i = -1;
 	while (philo[++i])
 	{
@@ -38,13 +44,17 @@ void	launcher(t_philo **philo)
 			philo[i]->t_id = thread;
 	}
 
+	// main thread must check deaths + nb_meals here
+	//ft_usleep(10000000);
+	//philo[0]->data->go_on = FALSE;
+
 	i = -1;
 	while (philo[++i])
 	{
 		if (pthread_join(philo[i]->t_id, NULL))
 			printf("pb joining t_id %luWhat can i do??\n", philo[i]->t_id);
-		//else
-			//printf("joined t_id %lu\n", data->philo[i]->t_id);
+		else
+			printf("joined t_id %lu\n", philo[i]->t_id);
 	}
 	return (printf("launcher returned\n"), (void) 0);
 }

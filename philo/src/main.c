@@ -14,8 +14,8 @@
 
 int	main(int argc, char **argv)
 {
-	t_philo	**philo;
-	t_data	*data;
+	t_philo			**philo;
+	t_data			*data;
 
 	data = arg_to_data(argc, ++argv);
 	if (!data)
@@ -24,10 +24,7 @@ int	main(int argc, char **argv)
 	if (!philo)
 		return (free(data), 1);
 	print_data(data);
-	//print_philo(philo);
-
 	launcher(philo);
-
 	//print_mutexes(data->mutexes);
 	//print_philo(philo);
 	return (end_free(philo, data), 0);

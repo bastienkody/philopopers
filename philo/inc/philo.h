@@ -13,27 +13,44 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-/* libraries */
+/*	libraries	*/
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <pthread.h>
 # include <sys/time.h>
 
-/* const state */
+/*	state const	*/
 # define EAT 0
 # define SLEEP 1
 # define THINK 2
+# define DEAD 3
 
-/* typedef */
+/*	msg const	*/
+# define F "has taken a fork"
+# define E "is eating"
+# define S "is sleeping"
+# define T "is thinking"
+# define D "died"
+
+/*	for bool	*/
+typedef int	t_bool;
+# define TRUE 1
+# define FALSE 0
+
+/*	typedef	*/
 typedef struct s_data
 {
+	struct timeval	t0;
 	int				nb_philo;
 	int				tt_die;
 	int				tt_eat;
 	int				tt_sleep;
+	int				tt_think;
 	int				min_meals;
-	pthread_mutex_t	**mutexes;
+	t_bool			go_on;
+	pthread_mutex_t	**futex;
+	pthread_mutex_t	*wutex;
 }			t_data;
 
 typedef struct s_philo
@@ -46,28 +63,38 @@ typedef struct s_philo
 	t_data				*data;
 }			t_philo;
 
-/* inits */
-t_data	*arg_to_data(int argc, char **argv);
-t_philo	**init_philo(t_data *data);
+/*	inits	*/
+t_data					*arg_to_data(int argc, char **argv);
+t_philo					**init_philo(t_data *data);
 
-/* free */
-void	free_philo(t_philo **philo);
-void	free_mutex(pthread_mutex_t **mutexes);
-void	end_free(t_philo **philo, t_data *data);
-void	phcreate_failure_mgmt(t_philo **philo, int i);
+/*	free	*/
+void					free_philo(t_philo **philo);
+void					free_futex(pthread_mutex_t **futex);
+void					end_free(t_philo **philo, t_data *data);
+void					phcreate_failure_mgmt(t_philo **philo, int i);
 
-/* threading */
-void	launcher(t_philo **philo);
+/*	threading	*/
+void					launcher(t_philo **philo);
 
-/* utils */
-int		ft_atoi_noverflw(const char *nptr);
+/*	actions	*/
+void					eatp(t_philo *philo);
+void					sleepp(t_philo *philo);
+void					thinkp(t_philo *philo);
 
-/* time */
-void	ft_usleep(unsigned int usec);
+/*	utils	*/
+int						ft_atoi_noverflw(const char *nptr);
 
-/* print-debug */
-void	print_data(t_data *data);
-void	print_philo(t_philo **philo);
-void	print_mutexes(pthread_mutex_t **mutexes);
+/*	time	*/
+void					ft_usleep(unsigned int usec);
+unsigned long int		c_time(struct timeval t0);
+
+/*	printer	*/
+void					ft_printer(unsigned long int time, int philo_nb,
+							char *msg, pthread_mutex_t *wutex);
+
+/*	print-debug	*/
+void					print_data(t_data *data);
+void					print_philo(t_philo **philo);
+void					print_futex(pthread_mutex_t **futex);
 
 #endif

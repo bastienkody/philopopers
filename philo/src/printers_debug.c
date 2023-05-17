@@ -22,6 +22,7 @@ void	print_data(t_data *data)
 	printf("tt_die = %i\n", data->tt_die);
 	printf("tt_eat = %i\n", data->tt_eat);
 	printf("tt_sleep = %i\n", data->tt_sleep);
+	printf("tt_think = %i\n", data->tt_think);
 	printf("min_meals = %i\n", data->min_meals);
 	printf("-------------------------\n");
 }
@@ -47,13 +48,13 @@ void	print_philo(t_philo **philo)
 	printf("-------------------------\n");
 }
 
-void	print_mutexes(pthread_mutex_t **mutexes)
+void	print_futex(pthread_mutex_t **futex)
 {
 	int	i;
 
-	if (!mutexes)
-		return ; 
+	if (!futex)
+		return ;
 	i = -1;
-	while (mutexes[++i])
-		printf("mutex %i :%p\n", i + 1, mutexes[i]);
+	while (futex[++i])
+		printf("mutex %i :%p\n", i + 1, futex[i]);
 }
