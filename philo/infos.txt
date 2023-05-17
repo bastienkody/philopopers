@@ -1,0 +1,36 @@
+Tests correction
+- 1 800 200 200	(no eat - die)
+- 5 800 200 200	(no die)
+- 5 800 200 200 7	(no die - stop after 7 eat)
+- 4 410 200 200	(no die)
+- 4 310 200 100	(1 die)
+
+Order
+	eat -> sleep -> think
+
+Arguments
+	argv++ 
+	argv[0] == nb philo
+	argv[1] == time to die
+	argv[2] == time to eat
+	argv[3] == time to sleep
+	argv[4] == nb of meals (optional)
+
+Pas de "time_to_think"
+	Au demarrage, pour eviter que chaque philo prenne une fourchette (et que ca
+	bloque chacun de manger car personne n'a 2 fourchette) je vais faire thinker
+	la moitie des philo (pairs vs impairs)
+
+Phtreadcreate failure
+	Si fail, j'appelle la fct qui detach et met tous les t_id a 0. Dans routine
+	il faudrait ensuite ne pas exec ceux avec t_id = 0. Sauf que t_id peut
+	valoir 0 car j'attache l'id apres la create (et lappel de la routine).
+	Ya des pb avec vlg et meme sans (grd nb de philo). 
+
+Struct data
+	Contient les infos de la simulation + mutexes tab
+	Malloce 1 seule fois -> chaque philo a un ptr sur elle
+
+Struct philo
+	Contient les infos indiv de chaque philo + un ptr sur struct data.
+	Stockee en tableau (vs linked list)

@@ -12,6 +12,29 @@
 
 #include "../inc/philo.h"
 
+/*	mutex : malloc + init	*/
+pthread_mutex_t	**init_mutex(t_data *data)
+{
+	pthread_mutex_t	**mutexes;
+	int				i;
+
+	if (data->nb_philo == 0)
+		return (NULL);
+	mutexes =  malloc((data->nb_philo + 1) * sizeof(pthread_mutex_t));
+	if (!mutexes)
+		return (NULL);
+	i = -1;
+	while (++i < data->nb_philo)
+	{
+		mutexes[i] = (pthread_mutex_t*) malloc(1 * sizeof(pthread_mutex_t));
+		if (!mutexes[i] || pthread_mutex_init(mutexes[i], NULL))
+			return (free_mutex(mutexes), NULL);
+
+	}
+	mutexes[i] = NULL;
+	return (mutexes);
+}
+
 /* stores argv in data */
 t_data	*init_data(char **argv)
 {
@@ -28,6 +51,9 @@ t_data	*init_data(char **argv)
 		data->min_meals = ft_atoi_noverflw(argv[4]);
 	else
 		data->min_meals = -1;
+	data->mutexes = init_mutex(data);
+	if (!data->mutexes)
+		return (free(data), NULL);
 	return (data);
 }
 
@@ -75,7 +101,11 @@ t_philo	**init_philo(t_data *data)
 		philo[i]->nb = i + 1;
 		philo[i]->meal_nb = data->min_meals;
 		philo[i]->t_id = 0;
+		philo[i]->data = data;
+		philo[i]->state = THINK;
 	}
 	philo[i] = NULL;
 	return (philo);
 }
+
+

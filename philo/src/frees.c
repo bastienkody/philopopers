@@ -24,12 +24,31 @@ void	free_philo(t_philo **philo)
 	free(philo);
 }
 
-void	end_free(t_data *data, t_philo **philo)
+/*	destroy then free	*/
+void	free_mutex(pthread_mutex_t **mutexes)
 {
-	if (data)
-		free(data);
+	int	i;
+
+	if (!mutexes)
+		return ;
+	i = -1;
+	while (mutexes[++i])
+	{
+		pthread_mutex_destroy(mutexes[i]);
+		free(mutexes[i]);
+	}
+	free(mutexes);
+}
+
+void	end_free(t_philo **philo, t_data *data)
+{
+	if (data->mutexes)
+		free_mutex(data->mutexes);
 	if (philo)
 		free_philo(philo);
+	if (data)
+		free(data);
+
 }
 
 /*	detach all philo

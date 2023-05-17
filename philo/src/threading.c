@@ -12,17 +12,18 @@
 
 #include "../inc/philo.h"
 
-/* do not execute if philo->t_id == 0 (means pb with thread create) */
-void	*do_smthg(void * t)
+void	*routine(void *phil)
 {
-	printf("salut from philo %i\n", *(int *)t);
+	t_philo	*philo;
+
+	philo = (t_philo*) phil;
+	printf("salut from philo %i %lu\n", ((t_philo*) philo)->nb, ((t_philo*) philo)->t_id);
+	
+
+
 	return (NULL);
 }
 
-/*	create a thread per philo + assigns th_id
-	if create fails : detach philo and return (no join)
-	pb : launcher returns to main before all detached thread finished
-	->add	*/
 void	launcher(t_philo **philo)
 {
 	pthread_t	thread;
@@ -31,19 +32,19 @@ void	launcher(t_philo **philo)
 	i = -1;
 	while (philo[++i])
 	{
-		if (pthread_create(&thread, NULL, &do_smthg, &philo[i]->nb))
+		if (pthread_create(&thread, NULL, &routine, philo[i]))
 			return (phcreate_failure_mgmt(philo, i + 1), (void) 0);
 		else
 			philo[i]->t_id = thread;
 	}
+
 	i = -1;
 	while (philo[++i])
 	{
 		if (pthread_join(philo[i]->t_id, NULL))
 			printf("pb joining t_id %luWhat can i do??\n", philo[i]->t_id);
-		else
-			printf("joined t_id %lu\n", philo[i]->t_id);
+		//else
+			//printf("joined t_id %lu\n", data->philo[i]->t_id);
 	}
 	return (printf("launcher returned\n"), (void) 0);
 }
- 

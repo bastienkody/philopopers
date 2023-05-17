@@ -26,23 +26,25 @@
 # define THINK 2
 
 /* typedef */
+typedef struct s_data
+{
+	int				nb_philo;
+	int				tt_die;
+	int				tt_eat;
+	int				tt_sleep;
+	int				min_meals;
+	pthread_mutex_t	**mutexes;
+}			t_data;
+
 typedef struct s_philo
 {
 	int					nb;
 	int					state;
 	unsigned long int	t_id;
-	int					last_meal;
+	unsigned long int	last_meal;
 	int					meal_nb;
+	t_data				*data;
 }			t_philo;
-
-typedef struct s_data
-{
-	int	nb_philo;
-	int	tt_die;
-	int	tt_eat;
-	int	tt_sleep;
-	int	min_meals;
-}			t_data;
 
 /* inits */
 t_data	*arg_to_data(int argc, char **argv);
@@ -50,7 +52,8 @@ t_philo	**init_philo(t_data *data);
 
 /* free */
 void	free_philo(t_philo **philo);
-void	end_free(t_data *data, t_philo **philo);
+void	free_mutex(pthread_mutex_t **mutexes);
+void	end_free(t_philo **philo, t_data *data);
 void	phcreate_failure_mgmt(t_philo **philo, int i);
 
 /* threading */
@@ -65,5 +68,6 @@ void	ft_usleep(unsigned int usec);
 /* print-debug */
 void	print_data(t_data *data);
 void	print_philo(t_philo **philo);
+void	print_mutexes(pthread_mutex_t **mutexes);
 
 #endif

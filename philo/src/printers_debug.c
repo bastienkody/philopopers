@@ -46,3 +46,14 @@ void	print_philo(t_philo **philo)
 	}
 	printf("-------------------------\n");
 }
+
+void	print_mutexes(pthread_mutex_t **mutexes)
+{
+	int	i;
+
+	if (!mutexes)
+		return ; 
+	i = -1;
+	while (mutexes[++i])
+		printf("mutex %i :%p\n", i + 1, mutexes[i]);
+}
