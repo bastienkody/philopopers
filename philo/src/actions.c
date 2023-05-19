@@ -46,6 +46,9 @@ void	eatp(t_philo *philo)
 	ft_printer(c_time(philo->data->t0), philo->nb, E, philo->data->wutex);
 	ft_usleep(philo->data->tt_eat * 1000);
 	futex_unlock(philo);
+	philo->last_meal = c_time(philo->data->t0); // mutex needed? because used by check death too
+	if (philo->meal_nb > 0)
+		philo->meal_nb -= 1; // mutex needed? because used by check_meal
 	return ((void) sleepp(philo));
 }
 
@@ -62,7 +65,6 @@ void	thinkp(t_philo *philo)
 {
 	if (!philo->data->go_on)
 		return ;
-
 	ft_printer(c_time(philo->data->t0), philo->nb, T, philo->data->wutex);
 	if (philo->data->tt_think > 0)
 		ft_usleep(philo->data->tt_think);

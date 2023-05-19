@@ -23,6 +23,11 @@ Struct data
 	.t0 : reference de depart de la simulation. On considere que ce timeval
 	represente la valeur 0 (un peu comme un epoch pour philo)
 
+Data->go_on
+	Maybe need of mutex on it? 
+	- used by each thread to start activity
+	- used by main thread for check_death
+
 Struct philo
 	Contient les infos indiv de chaque philo + un ptr sur struct data.
 	Stockee en tableau (tab de ptr sur philo)
@@ -43,7 +48,6 @@ Phtreadcreate failure
 	il faudrait ensuite ne pas exec ceux avec t_id = 0. Sauf que t_id peut
 	valoir 0 car j'attache l'id apres la create (et lappel de la routine).
 	Ya des pb avec vlg et meme sans (grd nb de philo). 
-
 
 Pas de "time_to_think" donne
 	On en calcul un "theorique" -> tt_think = tt_die - (tt_eat + tt_sleep)
@@ -84,7 +88,8 @@ Actions
 -think
 	check go_on
 	check tt_think >= 0
-	usleep tt_think ? only if >= 0 ? Or direclty go to eat? 
+	usleep tt_think ? only if >= 0 ? Or direclty go to eat? maybe think smthg 
+	like 70% of tt_think ? 
 
 Printer
 	wutex lock
@@ -97,3 +102,17 @@ Time mgmt
 	peut etre set data->t0 a bit later 
 	jouer sur les temps du syscal usleep pour voir si ft_usleep se comporte mieux (usec
 	trop long vs trop d'appels syscal usleep?)
+
+LES CHECKERS (dans un thread != des philos?)
+- Check_Death : 1 philo meurt -> printdeath et stop simul
+	- Soit chaque philo verifie avant d'attaquer une activite (peut mourrir pendant 
+	qu'il dort ou sleep donc a checker aussi pdt les activites? bof)
+	- Soit dans un thread a part (main?), une fonction qui verifie pour tous les 
+	philos et frequemment (toutes les 10ms, moins?)
+	Doit direct print death
+	Doit direct modifier data->go_on
+- Check_Meals : all philos have eaten x times
+	Idem que check death sauf qu'il faut tous que tous les philos mangent x
+	fois. 
+	rien a print
+	Doit direct modifier data->go_on

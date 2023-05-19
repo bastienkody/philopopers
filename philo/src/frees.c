@@ -54,7 +54,8 @@ void	end_free(t_philo **philo, t_data *data)
 
 /*	detach all philo
 	set t_id of detach thread to 0
-	philo with t_id of 0 wont be executed in the simulation */
+	philo with t_id of 0 wont be executed in the simulation
+	maybe better to set data->go_on to false here	*/
 void	phcreate_failure_mgmt(t_philo **philo, int i)
 {
 	int	j;
