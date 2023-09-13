@@ -18,12 +18,12 @@ void	print_data(t_data *data)
 		printf("data is NULL\n");
 	printf("-------------------------\n");
 	printf("\tT_DATA\n");
-	printf("nb_philo = %i\n", data->nb_philo);
-	printf("tt_die = %i\n", data->tt_die);
-	printf("tt_eat = %i\n", data->tt_eat);
-	printf("tt_sleep = %i\n", data->tt_sleep);
-	printf("tt_think = %i\n", data->tt_think);
-	printf("min_meals = %i\n", data->min_meals);
+	printf("nb_philo\t=\t%i\n", data->nb_philo);
+	printf("tt_die\t\t=\t%i\n", data->tt_die);
+	printf("tt_eat\t\t=\t%i\n", data->tt_eat);
+	printf("tt_sleep\t=\t%i\n", data->tt_sleep);
+	printf("tt_think\t=\t%i\n", data->tt_think);
+	printf("min_meals\t=\t%i\n", data->min_meals);
 	printf("-------------------------\n");
 }
 

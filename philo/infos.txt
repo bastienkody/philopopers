@@ -26,11 +26,10 @@ Struct data
 Data->go_on
 	Maybe need of mutex on it? 
 	- used by each thread to start activity
-	- used by main thread for check_death
+	- used by main thread for check_death and meal
 
-Struct philo
+Struct philo (utilisee en TABLEAU)
 	Contient les infos indiv de chaque philo + un ptr sur struct data.
-	Stockee en tableau (tab de ptr sur philo)
 
 Fourchettes (futex)
 	== tableau de ptr sur mutex

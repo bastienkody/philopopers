@@ -12,7 +12,7 @@
 
 #include "../inc/philo.h"
 
-void	futex_lock(t_philo *philo)
+int	futex_lock(t_philo *philo)
 {
 	pthread_mutex_lock(philo->data->futex[philo->nb - 1]);
 	ft_printer(c_time(philo->data->t0), philo->nb, F, philo->data->wutex);
@@ -23,7 +23,9 @@ void	futex_lock(t_philo *philo)
 		else
 			pthread_mutex_lock(philo->data->futex[0]);
 		ft_printer(c_time(philo->data->t0), philo->nb, F, philo->data->wutex);
+		return (1);
 	}
+	return (0);
 }
 
 void	futex_unlock(t_philo *philo)
@@ -40,22 +42,29 @@ void	futex_unlock(t_philo *philo)
 
 void	eatp(t_philo *philo)
 {
+	pthread_mutex_lock(philo->data->gutex);
 	if (!philo->data->go_on)
-		return ;
-	futex_lock(philo);
-	ft_printer(c_time(philo->data->t0), philo->nb, E, philo->data->wutex);
+		return ((void) pthread_mutex_unlock(philo->data->gutex));
+	pthread_mutex_unlock(philo->data->gutex);
+	if (futex_lock(philo)) // more than one philo
+	{
+		ft_printer(c_time(philo->data->t0), philo->nb, E, philo->data->wutex);
+		pthread_mutex_lock(philo->data->mealtex);
+		philo->last_meal = c_time(philo->data->t0) * 1000;
+		philo->meal_nb -= 1;
+		pthread_mutex_unlock(philo->data->mealtex);
+	}
 	ft_usleep(philo->data->tt_eat * 1000);
 	futex_unlock(philo);
-	philo->last_meal = c_time(philo->data->t0); // mutex needed? because used by check death too
-	if (philo->meal_nb > 0)
-		philo->meal_nb -= 1; // mutex needed? because used by check_meal
 	return ((void) sleepp(philo));
 }
 
 void	sleepp(t_philo *philo)
 {
+	pthread_mutex_lock(philo->data->gutex);
 	if (!philo->data->go_on)
-		return ;
+		return ((void) pthread_mutex_unlock(philo->data->gutex));
+	pthread_mutex_unlock(philo->data->gutex);
 	ft_printer(c_time(philo->data->t0), philo->nb, S, philo->data->wutex);
 	ft_usleep(philo->data->tt_sleep * 1000);
 	return ((void) thinkp(philo));
@@ -63,10 +72,11 @@ void	sleepp(t_philo *philo)
 
 void	thinkp(t_philo *philo)
 {
+	pthread_mutex_lock(philo->data->gutex);
 	if (!philo->data->go_on)
-		return ;
+		return ((void) pthread_mutex_unlock(philo->data->gutex));
+	pthread_mutex_unlock(philo->data->gutex);
 	ft_printer(c_time(philo->data->t0), philo->nb, T, philo->data->wutex);
-	if (philo->data->tt_think > 0)
-		ft_usleep(philo->data->tt_think);
+	//ft_usleep(500);
 	return ((void) eatp(philo));
 }

@@ -12,39 +12,6 @@
 
 #include "../inc/philo.h"
 
-/*	fourchettes mutex : malloc + init	*/
-pthread_mutex_t	**init_futex(t_data *data)
-{
-	pthread_mutex_t	**futex;
-	int				i;
-
-	if (data->nb_philo == 0)
-		return (NULL);
-	futex = malloc((data->nb_philo + 1) * sizeof(pthread_mutex_t));
-	if (!futex)
-		return (NULL);
-	i = -1;
-	while (++i < data->nb_philo)
-	{
-		futex[i] = (pthread_mutex_t *) malloc(1 * sizeof(pthread_mutex_t));
-		if (!futex[i] || pthread_mutex_init(futex[i], NULL))
-			return (free_futex(futex), NULL);
-	}
-	futex[i] = NULL;
-	return (futex);
-}
-
-/*	writing mutex : malloc + init	*/
-pthread_mutex_t	*init_wutex(void)
-{
-	pthread_mutex_t	*wutex;
-
-	wutex = malloc(1 * sizeof(pthread_mutex_t));
-	if (!wutex || pthread_mutex_init(wutex, NULL))
-		return (free(wutex), NULL);
-	return (wutex);
-}
-
 /* stores argv in data
 	set t0 later maybe? */
 t_data	*init_data(char **argv)
@@ -73,6 +40,12 @@ t_data	*init_data(char **argv)
 	data->wutex = init_wutex();
 	if (!data->wutex)
 		return (free_futex(data->futex), free(data), NULL);
+	data->gutex = init_gutex();
+	if (!data->gutex)
+		return (free_futex(data->futex), free(data->wutex), free(data), NULL);
+	data->mealtex = init_mealtex();
+	if (!data->mealtex)
+		return (free_futex(data->futex), free(data->wutex), free(data->gutex), free(data), NULL);
 	return (data);
 }
 
@@ -121,7 +94,6 @@ t_philo	**init_philo(t_data *data)
 		philo[i]->meal_nb = data->min_meals;
 		philo[i]->t_id = 0;
 		philo[i]->data = data;
-		philo[i]->state = THINK;
 	}
 	philo[i] = NULL;
 	return (philo);

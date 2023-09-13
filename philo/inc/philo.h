@@ -33,6 +33,11 @@
 # define T "is thinking"
 # define D "died"
 
+/*	error msg	*/
+# define FAILED "Pthread_create failed on philo"
+# define DETACH "Detaching other threads before program exiting\n"
+# define DETACH_FAILED "Pthread_detach also failed on philo"
+
 /*	for bool	*/
 typedef int	t_bool;
 # define TRUE 1
@@ -51,12 +56,13 @@ typedef struct s_data
 	t_bool			go_on;
 	pthread_mutex_t	**futex;
 	pthread_mutex_t	*wutex;
+	pthread_mutex_t	*gutex;
+	pthread_mutex_t	*mealtex;
 }			t_data;
 
 typedef struct s_philo
 {
 	int					nb;
-	int					state;
 	unsigned long int	t_id;
 	unsigned long int	last_meal;
 	int					meal_nb;
@@ -76,10 +82,20 @@ void					phcreate_failure_mgmt(t_philo **philo, int i);
 /*	threading	*/
 void					launcher(t_philo **philo);
 
+/*	mutexes	*/
+pthread_mutex_t			*init_mealtex(void);
+pthread_mutex_t			*init_gutex(void);
+pthread_mutex_t			*init_wutex(void);
+pthread_mutex_t			**init_futex(t_data *data);
+
 /*	actions	*/
 void					eatp(t_philo *philo);
 void					sleepp(t_philo *philo);
 void					thinkp(t_philo *philo);
+
+/*	end_checkers	*/
+void					check_death(t_philo **philo);
+void					check_meal(t_philo **philo);
 
 /*	utils	*/
 int						ft_atoi_noverflw(const char *nptr);
