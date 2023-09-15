@@ -45,7 +45,20 @@ void	end_free(t_philo **philo, t_data *data)
 	if (data->futex)
 		free_futex(data->futex);
 	if (data->wutex)
+	{
+		pthread_mutex_destroy(data->wutex);
 		free(data->wutex);
+	}
+	if (data->gutex)
+	{
+		pthread_mutex_destroy(data->gutex);
+		free(data->gutex);
+	}
+	if (data->mealtex)
+	{
+		pthread_mutex_destroy(data->mealtex);
+		free(data->mealtex);
+	}
 	if (philo)
 		free_philo(philo);
 	if (data)

@@ -12,24 +12,23 @@
 
 #include "../inc/philo.h"
 
-/*	hould i set t0 here? how?	*/
 void	*routine(void *phil)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *) phil;
+	pthread_mutex_lock(philo->data->mealtex);
 	philo->last_meal = 0;
+	pthread_mutex_unlock(philo->data->mealtex);
 	if (!(philo->nb & 1)) //pairs
-		eatp(philo);
+		eating(philo);
 	else 
-	{
-		ft_usleep(500);
-		thinkp(philo);
-	}
-	return (printf("routine returned philo %i\n", philo->nb), NULL);
+		thinking(philo);
+	return (NULL);
 }
 
-void	launcher(t_philo **philo)
+/*	check meals only if meal_nb arg given	*/
+void	launcher(t_philo **philo, int argc)
 {
 	pthread_t	thread;
 	int			i;
@@ -44,25 +43,17 @@ void	launcher(t_philo **philo)
 	}
 	while (TRUE)
 	{	
-		ft_usleep(500);
-		check_meal(philo);
-		check_death(philo);
-		pthread_mutex_lock((*philo)->data->gutex);
-		if (!(*philo)->data->go_on)
-		{
-			pthread_mutex_unlock((*philo)->data->gutex);
-			break;
-		}
-		pthread_mutex_unlock((*philo)->data->gutex);
-
+		ft_usleep((*philo)->data->tt_die);
+		if (argc == 6 && !check_meal(philo))
+			break ;
+		if (!check_death(philo))
+			break ;
 	}
 	i = -1;
 	while (philo[++i])
 	{
 		if (pthread_join(philo[i]->t_id, NULL))
 			printf("pb joining t_id %luWhat can i do??\n", philo[i]->t_id);
-		else
-			printf("joined t_id %lu\n", philo[i]->t_id);
 	}
-	return (printf("launcher returned\n"), (void) 0);
+	//return (printf("launcher returned\n"), (void) 0);
 }

@@ -22,13 +22,14 @@ t_data	*init_data(char **argv)
 	data = malloc(1 * sizeof(t_data));
 	if (!data)
 		return (NULL);
+	memset(data, 0, sizeof(t_data));
 	gettimeofday(&tv, NULL);
 	data->t0 = tv;
 	data->nb_philo = ft_atoi_noverflw(argv[0]);
 	data->tt_die = ft_atoi_noverflw(argv[1]);
 	data->tt_eat = ft_atoi_noverflw(argv[2]);
 	data->tt_sleep = ft_atoi_noverflw(argv[3]);
-	data->tt_think = data->tt_die - data->tt_eat - data->tt_sleep;
+	data->tt_think = (data->tt_die - data->tt_eat - data->tt_sleep) * 9 / 10;
 	data->go_on = TRUE;
 	if (argv[4])
 		data->min_meals = ft_atoi_noverflw(argv[4]);
@@ -39,13 +40,13 @@ t_data	*init_data(char **argv)
 		return (free(data), NULL);
 	data->wutex = init_wutex();
 	if (!data->wutex)
-		return (free_futex(data->futex), free(data), NULL);
+		return (end_free(NULL, data), NULL);
 	data->gutex = init_gutex();
 	if (!data->gutex)
-		return (free_futex(data->futex), free(data->wutex), free(data), NULL);
+		return (end_free(NULL, data), NULL);
 	data->mealtex = init_mealtex();
 	if (!data->mealtex)
-		return (free_futex(data->futex), free(data->wutex), free(data->gutex), free(data), NULL);
+		return (end_free(NULL, data), NULL);
 	return (data);
 }
 
@@ -58,7 +59,7 @@ t_data	*arg_to_data(int argc, char **argv)
 
 	i = -1;
 	if (argc < 5 || argc > 6)
-		return (write(2, "Arg nb pb\n", 10), NULL);
+		return (printf("%s\n", INV_ARG_NB), NULL);
 	while (argv[++i])
 	{
 		if (*argv[i] == '-' || ft_atoi_noverflw(argv[i]) < 0)

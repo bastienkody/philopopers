@@ -19,8 +19,9 @@ OBJS	=	${SRCS:%.c=$(BUILD_DIR)/%.o}
 
 NAME =	philo
 CC =	cc
-CFLAGS		=	-Wall -Wextra -Werror -pthread -g3
+CFLAGS		=	-Wall -Wextra -Werror -pthread
 LDFLAGS 	=	-pthread
+# fsan		: -g in compile and + -fsanitize=thread in link
 
 $(BUILD_DIR)/%.o: %.c
 			@mkdir -p $(dir $@)
@@ -30,7 +31,7 @@ $(BUILD_DIR)/%.o: %.c
 
 all:	${NAME}
 
-${NAME}:	${OBJS} ${HEADER}
+${NAME}:	${HEADER} ${OBJS} 
 			@echo "\033[32m\c"
 			${CC} -o ${NAME} ${OBJS} ${LDFLAGS}
 			@echo "Link complete for exec --> \033[4;36;1m${NAME}\033[0m"

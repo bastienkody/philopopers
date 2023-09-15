@@ -27,15 +27,14 @@ void	ft_usleep(unsigned int usec)
 {
 	struct timeval		tv_0;
 	struct timeval		tv_tmp;
-	unsigned long int	delta;
 
-	delta = 0;
 	gettimeofday(&tv_0, NULL);
-	while (delta < usec)
+	usleep(usec / 10 * 9);
+	gettimeofday(&tv_tmp, NULL);
+	while (timeval_cmp(tv_0, tv_tmp) < usec)
 	{
-		usleep(10);
+		usleep(usec / 10);
 		gettimeofday(&tv_tmp, NULL);
-		delta = timeval_cmp(tv_0, tv_tmp);
 	}
 }
 

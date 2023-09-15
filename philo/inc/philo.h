@@ -16,6 +16,7 @@
 /*	libraries	*/
 # include <unistd.h>
 # include <stdlib.h>
+# include <string.h>
 # include <stdio.h>
 # include <pthread.h>
 # include <sys/time.h>
@@ -37,6 +38,9 @@
 # define FAILED "Pthread_create failed on philo"
 # define DETACH "Detaching other threads before program exiting\n"
 # define DETACH_FAILED "Pthread_detach also failed on philo"
+# define INV_ARG_NB "Invalid number of argument.\nUsage: ./philo \
+<number_of_philosophers> <time_to_die> <time_to_eat> \
+<time_to_sleep> <number_of_meal(optional)>"
 
 /*	for bool	*/
 typedef int	t_bool;
@@ -80,7 +84,7 @@ void					end_free(t_philo **philo, t_data *data);
 void					phcreate_failure_mgmt(t_philo **philo, int i);
 
 /*	threading	*/
-void					launcher(t_philo **philo);
+void					launcher(t_philo **philo, int argc);
 
 /*	mutexes	*/
 pthread_mutex_t			*init_mealtex(void);
@@ -89,13 +93,14 @@ pthread_mutex_t			*init_wutex(void);
 pthread_mutex_t			**init_futex(t_data *data);
 
 /*	actions	*/
-void					eatp(t_philo *philo);
-void					sleepp(t_philo *philo);
-void					thinkp(t_philo *philo);
+void					eating(t_philo *philo);
+void					sleeping(t_philo *philo);
+void					thinking(t_philo *philo);
 
-/*	end_checkers	*/
-void					check_death(t_philo **philo);
-void					check_meal(t_philo **philo);
+/*	checkers	*/
+int						check_death(t_philo **philo);
+int						check_meal(t_philo **philo);
+int						check_go_on(t_philo *philo);
 
 /*	utils	*/
 int						ft_atoi_noverflw(const char *nptr);

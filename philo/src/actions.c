@@ -12,26 +12,33 @@
 
 #include "../inc/philo.h"
 
+/*	ret 0 : not go_on, no fork locked
+	ret 1 : solo philo, one fork only
+	ret 2 : ok two forks locked		*/
 int	futex_lock(t_philo *philo)
 {
+	if (!check_go_on(philo))
+		return (0);
 	pthread_mutex_lock(philo->data->futex[philo->nb - 1]);
-	ft_printer(c_time(philo->data->t0), philo->nb, F, philo->data->wutex);
+	if (check_go_on(philo))
+		ft_printer(c_time(philo->data->t0), philo->nb, F, philo->data->wutex);
 	if (philo->data->nb_philo > 1)
 	{
 		if (philo->nb < philo->data->nb_philo)
 			pthread_mutex_lock(philo->data->futex[philo->nb]);
 		else
 			pthread_mutex_lock(philo->data->futex[0]);
-		ft_printer(c_time(philo->data->t0), philo->nb, F, philo->data->wutex);
-		return (1);
+		if (check_go_on(philo))
+			ft_printer(c_time(philo->data->t0), philo->nb, F, philo->data->wutex);
+		return (2);
 	}
-	return (0);
+	return (1);
 }
 
-void	futex_unlock(t_philo *philo)
+void	futex_unlock(t_philo *philo, int locked_fork_nb)
 {
 	pthread_mutex_unlock(philo->data->futex[philo->nb - 1]);
-	if (philo->data->nb_philo > 1)
+	if (locked_fork_nb == 2)
 	{
 		if (philo->nb < philo->data->nb_philo)
 			pthread_mutex_unlock(philo->data->futex[philo->nb]);
@@ -40,14 +47,17 @@ void	futex_unlock(t_philo *philo)
 	}
 }
 
-void	eatp(t_philo *philo)
+void	eating(t_philo *philo)
 {
-	pthread_mutex_lock(philo->data->gutex);
-	if (!philo->data->go_on)
-		return ((void) pthread_mutex_unlock(philo->data->gutex));
-	pthread_mutex_unlock(philo->data->gutex);
-	if (futex_lock(philo)) // more than one philo
+	int	locked_fork_nb;
+
+	locked_fork_nb = futex_lock(philo);
+	if (locked_fork_nb == 0)
+		return ; // go_on seen ko while locking futex
+	if (locked_fork_nb == 2) // ordinary behaviour
 	{
+		if (!check_go_on(philo))
+			return (futex_unlock(philo, locked_fork_nb));
 		ft_printer(c_time(philo->data->t0), philo->nb, E, philo->data->wutex);
 		pthread_mutex_lock(philo->data->mealtex);
 		philo->last_meal = c_time(philo->data->t0) * 1000;
@@ -55,28 +65,27 @@ void	eatp(t_philo *philo)
 		pthread_mutex_unlock(philo->data->mealtex);
 	}
 	ft_usleep(philo->data->tt_eat * 1000);
-	futex_unlock(philo);
-	return ((void) sleepp(philo));
+	futex_unlock(philo, locked_fork_nb);
+	return (sleeping(philo));
 }
 
-void	sleepp(t_philo *philo)
+void	sleeping(t_philo *philo)
 {
-	pthread_mutex_lock(philo->data->gutex);
-	if (!philo->data->go_on)
-		return ((void) pthread_mutex_unlock(philo->data->gutex));
-	pthread_mutex_unlock(philo->data->gutex);
+	if (!check_go_on(philo))
+		return ;
 	ft_printer(c_time(philo->data->t0), philo->nb, S, philo->data->wutex);
 	ft_usleep(philo->data->tt_sleep * 1000);
-	return ((void) thinkp(philo));
+	return (thinking(philo));
 }
 
-void	thinkp(t_philo *philo)
+void	thinking(t_philo *philo)
 {
-	pthread_mutex_lock(philo->data->gutex);
-	if (!philo->data->go_on)
-		return ((void) pthread_mutex_unlock(philo->data->gutex));
-	pthread_mutex_unlock(philo->data->gutex);
+	if (!check_go_on(philo))
+		return ;
 	ft_printer(c_time(philo->data->t0), philo->nb, T, philo->data->wutex);
-	//ft_usleep(500);
-	return ((void) eatp(philo));
+	if (philo->data->tt_think > 0)
+		ft_usleep((philo->data->tt_think) * 1000);
+	else
+		ft_usleep(100);
+	return (eating(philo));
 }
