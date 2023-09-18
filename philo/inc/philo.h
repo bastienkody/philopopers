@@ -21,12 +21,6 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-/*	state const	*/
-# define EAT 0
-# define SLEEP 1
-# define THINK 2
-# define DEAD 3
-
 /*	msg const	*/
 # define F "has taken a fork"
 # define E "is eating"
@@ -42,7 +36,7 @@
 <number_of_philosophers> <time_to_die> <time_to_eat> \
 <time_to_sleep> <number_of_meal(optional)>"
 
-/*	for bool	*/
+/*	boolean	*/
 typedef int	t_bool;
 # define TRUE 1
 # define FALSE 0
@@ -108,6 +102,7 @@ int						ft_atoi_noverflw(const char *nptr);
 /*	time	*/
 void					ft_usleep(unsigned int usec);
 unsigned long int		c_time(struct timeval t0);
+void					set_t0(t_data *data);
 
 /*	printer	*/
 void					ft_printer(unsigned long int time, int philo_nb,

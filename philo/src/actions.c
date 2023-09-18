@@ -13,7 +13,7 @@
 #include "../inc/philo.h"
 
 /*	ret 0 : not go_on, no fork locked
-	ret 1 : solo philo, one fork only
+	ret 1 : solo philo, single fork locked
 	ret 2 : ok two forks locked		*/
 int	futex_lock(t_philo *philo)
 {
@@ -29,7 +29,8 @@ int	futex_lock(t_philo *philo)
 		else
 			pthread_mutex_lock(philo->data->futex[0]);
 		if (check_go_on(philo))
-			ft_printer(c_time(philo->data->t0), philo->nb, F, philo->data->wutex);
+			ft_printer(c_time(philo->data->t0), philo->nb, F, \
+				philo->data->wutex);
 		return (2);
 	}
 	return (1);
@@ -53,14 +54,14 @@ void	eating(t_philo *philo)
 
 	locked_fork_nb = futex_lock(philo);
 	if (locked_fork_nb == 0)
-		return ; // go_on seen ko while locking futex
-	if (locked_fork_nb == 2) // ordinary behaviour
+		return ;
+	if (locked_fork_nb == 2)
 	{
 		if (!check_go_on(philo))
 			return (futex_unlock(philo, locked_fork_nb));
 		ft_printer(c_time(philo->data->t0), philo->nb, E, philo->data->wutex);
 		pthread_mutex_lock(philo->data->mealtex);
-		philo->last_meal = c_time(philo->data->t0) * 1000;
+		philo->last_meal = c_time(philo->data->t0);
 		philo->meal_nb -= 1;
 		pthread_mutex_unlock(philo->data->mealtex);
 	}
@@ -86,6 +87,6 @@ void	thinking(t_philo *philo)
 	if (philo->data->tt_think > 0)
 		ft_usleep((philo->data->tt_think) * 1000);
 	else
-		ft_usleep(100);
+		ft_usleep(1);
 	return (eating(philo));
 }

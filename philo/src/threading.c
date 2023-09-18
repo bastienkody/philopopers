@@ -20,14 +20,13 @@ void	*routine(void *phil)
 	pthread_mutex_lock(philo->data->mealtex);
 	philo->last_meal = 0;
 	pthread_mutex_unlock(philo->data->mealtex);
-	if (!(philo->nb & 1)) //pairs
+	if (!(philo->nb & 1))
 		eating(philo);
 	else 
 		thinking(philo);
 	return (NULL);
 }
 
-/*	check meals only if meal_nb arg given	*/
 void	launcher(t_philo **philo, int argc)
 {
 	pthread_t	thread;
@@ -42,8 +41,8 @@ void	launcher(t_philo **philo, int argc)
 			philo[i]->t_id = thread;
 	}
 	while (TRUE)
-	{	
-		ft_usleep((*philo)->data->tt_die);
+	{
+		ft_usleep((*philo)->data->tt_die / 2);
 		if (argc == 6 && !check_meal(philo))
 			break ;
 		if (!check_death(philo))
@@ -51,9 +50,6 @@ void	launcher(t_philo **philo, int argc)
 	}
 	i = -1;
 	while (philo[++i])
-	{
 		if (pthread_join(philo[i]->t_id, NULL))
-			printf("pb joining t_id %luWhat can i do??\n", philo[i]->t_id);
-	}
-	//return (printf("launcher returned\n"), (void) 0);
+			printf("Error joining t_id %lu\n", philo[i]->t_id);
 }

@@ -12,7 +12,7 @@
 
 #include "../inc/philo.h"
 
-/*	CHECKERS :	ret 1 = go_on - ret 0 = end	*/
+/*	ALL CHECKERS :	ret 1 = go_on;	ret 0 = end	*/
 int	check_death(t_philo **philo)
 {
 	int	i;
@@ -21,13 +21,15 @@ int	check_death(t_philo **philo)
 	while (philo[++i])
 	{
 		pthread_mutex_lock((*philo)->data->mealtex);
-		if (c_time(philo[i]->data->t0) - (philo[i]->last_meal / 1000) > (unsigned long)philo[i]->data->tt_die)
+		if (c_time(philo[i]->data->t0) - (philo[i]->last_meal) > \
+			(unsigned long)philo[i]->data->tt_die * 1000)
 		{
 			pthread_mutex_unlock((*philo)->data->mealtex);
 			pthread_mutex_lock((*philo)->data->gutex);
 			philo[i]->data->go_on = FALSE;
 			pthread_mutex_unlock((*philo)->data->gutex);
-			ft_printer(c_time(philo[i]->data->t0), philo[i]->nb, D, philo[i]->data->wutex);
+			ft_printer(c_time(philo[i]->data->t0), philo[i]->nb, D, \
+				philo[i]->data->wutex);
 			return (0);
 		}
 		pthread_mutex_unlock((*philo)->data->mealtex);
@@ -42,11 +44,8 @@ int	check_meal(t_philo **philo)
 	i = -1;
 	pthread_mutex_lock((*philo)->data->mealtex);
 	while (philo[++i])
-	{
-		//printf("philo%i meal:%i\n", i + 1, (*philo)->meal_nb);
 		if (philo[i]->meal_nb != 0)
 			return (pthread_mutex_unlock((*philo)->data->mealtex), 1);
-	}
 	pthread_mutex_unlock((*philo)->data->mealtex);
 	pthread_mutex_lock((*philo)->data->gutex);
 	philo[0]->data->go_on = FALSE; 

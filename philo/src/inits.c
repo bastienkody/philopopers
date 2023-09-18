@@ -12,29 +12,8 @@
 
 #include "../inc/philo.h"
 
-/* stores argv in data
-	set t0 later maybe? */
-t_data	*init_data(char **argv)
+t_data	*init_all_mutexes(t_data *data)
 {
-	t_data			*data;
-	struct timeval	tv;
-
-	data = malloc(1 * sizeof(t_data));
-	if (!data)
-		return (NULL);
-	memset(data, 0, sizeof(t_data));
-	gettimeofday(&tv, NULL);
-	data->t0 = tv;
-	data->nb_philo = ft_atoi_noverflw(argv[0]);
-	data->tt_die = ft_atoi_noverflw(argv[1]);
-	data->tt_eat = ft_atoi_noverflw(argv[2]);
-	data->tt_sleep = ft_atoi_noverflw(argv[3]);
-	data->tt_think = (data->tt_die - data->tt_eat - data->tt_sleep) * 9 / 10;
-	data->go_on = TRUE;
-	if (argv[4])
-		data->min_meals = ft_atoi_noverflw(argv[4]);
-	else
-		data->min_meals = -1;
 	data->futex = init_futex(data);
 	if (!data->futex)
 		return (free(data), NULL);
@@ -50,12 +29,32 @@ t_data	*init_data(char **argv)
 	return (data);
 }
 
+t_data	*init_data(char **argv)
+{
+	t_data			*data;
+
+	data = malloc(1 * sizeof(t_data));
+	if (!data)
+		return (NULL);
+	memset(data, 0, sizeof(t_data));
+	data->nb_philo = ft_atoi_noverflw(argv[0]);
+	data->tt_die = ft_atoi_noverflw(argv[1]);
+	data->tt_eat = ft_atoi_noverflw(argv[2]);
+	data->tt_sleep = ft_atoi_noverflw(argv[3]);
+	data->tt_think = (data->tt_die - data->tt_eat - data->tt_sleep) / 10 * 9;
+	data->go_on = TRUE;
+	if (argv[4])
+		data->min_meals = ft_atoi_noverflw(argv[4]);
+	else
+		data->min_meals = -1;
+	return (init_all_mutexes(data));
+}
+
 /* checks arg (++argv dans main) + calls init_data() */
 t_data	*arg_to_data(int argc, char **argv)
 {
 	int		i;
 	int		j;
-	t_data	*data;
 
 	i = -1;
 	if (argc < 5 || argc > 6)
@@ -63,16 +62,15 @@ t_data	*arg_to_data(int argc, char **argv)
 	while (argv[++i])
 	{
 		if (*argv[i] == '-' || ft_atoi_noverflw(argv[i]) < 0)
-			return (write(2, "Arg < 0 (or int over/under flow)\n", 33), NULL);
+			return (printf("One argument is negative, or overflowed\n"), NULL);
 		j = -1;
 		while (argv[i][++j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
-				return (write(2, "Arg with non digit val\n", 23), NULL);
+				return (printf("One argument with a non-digit value\n"), NULL);
 		}
 	}
-	data = init_data(argv);
-	return (data);
+	return (init_data(argv));
 }
 
 t_philo	**init_philo(t_data *data)
@@ -93,6 +91,7 @@ t_philo	**init_philo(t_data *data)
 			return (free_philo(philo), NULL);
 		philo[i]->nb = i + 1;
 		philo[i]->meal_nb = data->min_meals;
+		philo[i]->last_meal = 0;
 		philo[i]->t_id = 0;
 		philo[i]->data = data;
 	}

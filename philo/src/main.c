@@ -17,16 +17,14 @@ int	main(int argc, char **argv)
 	t_philo			**philo;
 	t_data			*data;
 
-	printf("%i\n", argc);
 	data = arg_to_data(argc, ++argv);
 	if (!data)
 		return (1);
+	set_t0(data);
 	philo = init_philo(data);
 	if (!philo)
-		return (free(data), 1);
+		return (end_free(philo, data), 1);
 	print_data(data);
 	launcher(philo, argc);
-	//print_mutexes(data->mutexes);
-	//print_philo(philo);
 	return (end_free(philo, data), 0);
 }

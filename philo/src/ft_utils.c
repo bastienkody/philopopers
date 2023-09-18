@@ -17,16 +17,11 @@
 	- returns -1 if overflow	*/
 int	ft_atoi_noverflw(const char *nptr)
 {
-	int		sign;
 	int		res;
 	int		old_res;
 
-	sign = 1;
 	if (*nptr == '-')
-	{
-		sign *= -1;
-		nptr++;
-	}
+		return (-1);
 	res = 0;
 	old_res = 0;
 	while (*nptr >= '0' && *nptr <= '9')
@@ -36,22 +31,21 @@ int	ft_atoi_noverflw(const char *nptr)
 			return (-1);
 		old_res = res;
 	}
-	return (res * sign);
+	return (res);
 }
 
 const char	*apply_color(int philo_nb)
 {
-	const char	*color[8] = {"\033[31m", "\033[32m", "\033[33m",\
+	const char	*color[8] = {"\033[31m", "\033[32m", "\033[33m", \
 		"\033[34m", "\033[35m", "\033[36m", "\033[37m", NULL};
 
-	return(color[philo_nb % 7]);
+	return (color[philo_nb % 7]);
 }
 
-/*	wutex lock + print philo msg
-	printf for now. if too long i'd try itoa + write	*/
 void	ft_printer(unsigned long int time, int philo_nb, char *msg,
 	pthread_mutex_t *wutex)
 {
+	time /= 1000;
 	pthread_mutex_lock(wutex);
 	printf("%s%lu %i %s\033[0m\n", apply_color(philo_nb), time, philo_nb, msg);
 	pthread_mutex_unlock(wutex);

@@ -1,25 +1,25 @@
-HEADER = ./inc/philo.h
+HEADER		=	./inc/philo.h
 
-SRC_DIR 	= ./src/
-BUILD_DIR	= ./build
+SRC_DIR		=	./src/
+BUILD_DIR	=	./build
 
-SRCS_NAME =	main.c\
-			inits.c\
-			frees.c\
-			threading.c\
-			time_mgmt.c\
-			actions.c\
-			ft_utils.c\
-			printers_debug.c\
-			mutexes.c\
-			end_checkers.c
+SRCS_NAME	=	main.c\
+				inits.c\
+				frees.c\
+				threading.c\
+				time_mgmt.c\
+				actions.c\
+				ft_utils.c\
+				printers_debug.c\
+				mutexes.c\
+				end_checkers.c
 		
-SRCS	= 	$(addprefix ${SRC_DIR}, ${SRCS_NAME})
-OBJS	=	${SRCS:%.c=$(BUILD_DIR)/%.o}
+SRCS		=	$(addprefix ${SRC_DIR}, ${SRCS_NAME})
+OBJS		=	${SRCS:%.c=$(BUILD_DIR)/%.o}
 
-NAME =	philo
-CC =	cc
-CFLAGS		=	-Wall -Wextra -Werror -pthread
+NAME 		=	philo
+CC 			=	cc
+CFLAGS		=	-Wall -Wextra -Werror -pthread -g3
 LDFLAGS 	=	-pthread
 # fsan		: -g in compile and + -fsanitize=thread in link
 
@@ -29,7 +29,7 @@ $(BUILD_DIR)/%.o: %.c
 			${CC} ${CFLAGS} -c $< -o $@
 			@echo "\033[0m\c"
 
-all:	${NAME}
+all:		${NAME}
 
 ${NAME}:	${HEADER} ${OBJS} 
 			@echo "\033[32m\c"
@@ -37,15 +37,15 @@ ${NAME}:	${HEADER} ${OBJS}
 			@echo "Link complete for exec --> \033[4;36;1m${NAME}\033[0m"
 
 clean:
-		@rm -rf ${OBJS}
-		@echo "\033[32m${NAME} obj cleaned"
+			@rm -rf ${OBJS}
+			@echo "\033[32m${NAME} obj cleaned\033[0m"
 
 fclean:		clean
-		@rm -rf ${NAME}
-		@echo "\033[32m${NAME} fcleaned"
+			@rm -rf ${NAME}
+			@echo "\033[32m${NAME} fcleaned\033[0m"
 
-re:		fclean all
+re:			fclean all
 
-nice:	all clean
+nice:		all clean
 
-.PHONY:	all clean re
+.PHONY:		all clean re
