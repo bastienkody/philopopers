@@ -84,9 +84,5 @@ void	thinking(t_philo *philo)
 	if (!check_go_on(philo))
 		return ;
 	ft_printer(c_time(philo->data->t0), philo->nb, T, philo->data->wutex);
-/*	if (philo->data->tt_think > 0)
-		ft_usleep((philo->data->tt_think) * 1000);
-	else
-		ft_usleep(1);*/
 	return (eating(philo));
 }
