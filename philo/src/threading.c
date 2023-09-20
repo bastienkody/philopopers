@@ -17,9 +17,12 @@ void	*routine(void *phil)
 	t_philo	*philo;
 
 	philo = (t_philo *) phil;
+	if (philo->t_id == 0)
+		return (NULL);
 	pthread_mutex_lock(philo->data->mealtex);
 	philo->last_meal = 0;
 	pthread_mutex_unlock(philo->data->mealtex);
+
 	if (!(philo->nb & 1))
 		eating(philo);
 	else 
