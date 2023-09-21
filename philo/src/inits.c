@@ -62,12 +62,12 @@ t_data	*arg_to_data(int argc, char **argv)
 	while (argv[++i])
 	{
 		if (*argv[i] == '-' || ft_atoi_noverflw(argv[i]) < 0)
-			return (printf("One argument is negative, or overflowed\n"), NULL);
+			return (printf("%s\n", ATOI_NEG), NULL);
 		j = -1;
 		while (argv[i][++j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
-				return (printf("One argument with a non-digit value\n"), NULL);
+				return (printf("%s\n", NON_DIGIT), NULL);
 		}
 	}
 	return (init_data(argv));
@@ -89,12 +89,12 @@ t_philo	**init_philo(t_data *data)
 		philo[i] = malloc(1 * sizeof(t_philo));
 		if (!philo[i])
 			return (free_philo(philo), NULL);
+		memset(philo[i], 0, sizeof(t_philo));
 		philo[i]->nb = i + 1;
 		philo[i]->meal_nb = data->min_meals;
-		philo[i]->last_meal = 0;
-		philo[i]->t_id = 0;
 		philo[i]->data = data;
 	}
 	philo[i] = NULL;
+	set_t0(data);
 	return (philo);
 }

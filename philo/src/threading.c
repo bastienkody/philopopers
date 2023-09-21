@@ -17,12 +17,6 @@ void	*routine(void *phil)
 	t_philo	*philo;
 
 	philo = (t_philo *) phil;
-	if (philo->t_id == 0)
-		return (NULL);
-	pthread_mutex_lock(philo->data->mealtex);
-	philo->last_meal = 0;
-	pthread_mutex_unlock(philo->data->mealtex);
-
 	if (!(philo->nb & 1))
 		eating(philo);
 	else 
@@ -30,8 +24,18 @@ void	*routine(void *phil)
 	return (NULL);
 }
 
-/*	parity = 0 -> even
-	partiy = 1 -> odd	*/
+/*	for odd threads not to overrun even threads at forks picking 1st meal
+	the lower the numbers the bigger the delay (max_philo=200 is protected)	*/
+void	parity_launch_delay(t_philo *philo)
+{
+	const int	delay = MAX_PHILO - philo->data->nb_philo;
+
+	if (delay > 0)
+		return (ft_usleep(delay));
+	ft_usleep(1);
+}
+
+/*	parity:	0 -> even ;	1 -> odd	*/
 int	half_launcher(t_philo **philo, t_bool parity)
 {
 	pthread_t	thread;
@@ -50,13 +54,14 @@ int	half_launcher(t_philo **philo, t_bool parity)
 	return (1);
 }
 
-void	launcher(t_philo **philo, int argc)
+/*	launch evens then odds, checkers, join threads at end	*/
+void	simulator(t_philo **philo, int argc)
 {
 	int	i;
 
 	if (half_launcher(philo, 0) == 0)
 		return ;
-	ft_usleep(200 - (*philo)->data->nb_philo);
+	parity_launch_delay(*philo);
 	if (half_launcher(philo, 1) == 0)
 		return ;
 	while (TRUE)

@@ -29,12 +29,17 @@
 # define D "died"
 
 /*	error msg	*/
+# define ATOI_NEG "One argument is negative, or int overflowed"
+# define NON_DIGIT "One argument with a non-digit value"
 # define FAILED "Pthread_create failed on philo"
 # define DETACH "Detaching other threads before program exiting\n"
 # define DETACH_FAILED "Pthread_detach also failed on philo"
 # define INV_ARG_NB "Invalid number of argument.\nUsage: ./philo \
 <number_of_philosophers> <time_to_die> <time_to_eat> \
 <time_to_sleep> <number_of_meal(optional)>"
+
+/*	integer	*/
+# define MAX_PHILO 200
 
 /*	boolean	*/
 typedef int	t_bool;
@@ -78,7 +83,7 @@ void					end_free(t_philo **philo, t_data *data);
 void					phcreate_failure_mgmt(t_philo **philo, int i);
 
 /*	threading	*/
-void					launcher(t_philo **philo, int argc);
+void					simulator(t_philo **philo, int argc);
 
 /*	mutexes	*/
 pthread_mutex_t			*init_mealtex(void);
@@ -95,6 +100,7 @@ void					thinking(t_philo *philo);
 int						check_death(t_philo **philo);
 int						check_meal(t_philo **philo);
 int						check_go_on(t_philo *philo);
+void					turn_go_on_to_false(t_philo *philo);
 
 /*	utils	*/
 int						ft_atoi_noverflw(const char *nptr);

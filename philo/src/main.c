@@ -20,11 +20,10 @@ int	main(int argc, char **argv)
 	data = arg_to_data(argc, ++argv);
 	if (!data)
 		return (1);
-	set_t0(data);
 	philo = init_philo(data);
 	if (!philo)
 		return (end_free(philo, data), 1);
 	print_data(data);
-	launcher(philo, argc);
+	simulator(philo, argc);
 	return (end_free(philo, data), 0);
 }

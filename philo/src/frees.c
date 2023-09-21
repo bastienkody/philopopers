@@ -65,14 +65,16 @@ void	end_free(t_philo **philo, t_data *data)
 		free(data);
 }
 
-/*	detach all philo
-	set t_id of detach thread to 0
-	philo with t_id of 0 wont be executed in the simulation
-	maybe better to set data->go_on to false here	*/
+/*	stop simul : go_on=False, so no new action for created philo
+	detach all already created philo : no need to join them
+	all philo will still be freed (via end_free in main)
+	set t_id of detach thread to 0 (most prob unecessary)
+ 	*/
 void	phcreate_failure_mgmt(t_philo **philo, int i)
 {
 	int	j;
 
+	turn_go_on_to_false(*philo);
 	printf("%s %i. %s", FAILED, i, DETACH);
 	j = -1;
 	while (philo[++j])

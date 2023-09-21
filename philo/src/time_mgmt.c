@@ -12,7 +12,7 @@
 
 #include "../inc/philo.h"
 
-/*	returns timestamp (current time since simulation start in ms)	*/
+/*	returns timestamp (elapsed time since tv_0)	*/
 unsigned long int	c_time(struct timeval t0)
 {
 	struct timeval	tmp;
