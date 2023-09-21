@@ -61,7 +61,7 @@ timeout 1 ./${EXEC_N} 1 800 > two_arg.txt 2> two_arg_err.txt
 timeout 1 ./${EXEC_N} 1 800 200 > three_arg.txt 2> three_arg_err.txt
 timeout 1 ./${EXEC_N} 5 800 200 200 7 56 > six_arg.txt 2> six_arg_err.txt
 if [[ -s no_arg.txt || -s one_arg.txt || -s two_arg.txt || -s three_arg.txt || -s six_arg_.txt ]] ; then
-	echo -ne "${YEL} ${EXEC_N} wrote on std out (fd 1)${END} "
+	echo -e "${YEL} ${EXEC_N} wrote on std out (fd 1)${END} "
 fi
 if [[ -s no_arg_err.txt && -s one_arg_err.txt && -s two_arg_err.txt && -s three_arg_err.txt && six_arg_err.txt ]] ; then
 	echo -e "${GREEN} ${EXEC_N} wrote on std err (fd 2)${END} "

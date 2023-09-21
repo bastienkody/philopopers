@@ -2,8 +2,14 @@ Tests correction
 - 1 800 200 200		(no eat - die)
 - 5 800 200 200		(no die)
 - 5 800 200 200 7	(no die - stop after 7 eat)
-- 4 2410 200 00		(no die)
+- 4 410 200 100		(no die)
 - 4 310 200 100		(1 die)
+
+tests supp
+- 3 410 200 100	(die)
+- 4 800 200 2000 (die, but exec wait for other to finish sleeping)
+- 200 410 200 100 (hard but ok)
+- 3 800 200 70 (no die, youre ko if you think too long)
 
 Order
 	eat -> sleep -> think
@@ -21,12 +27,7 @@ Struct data
 	Malloce 1 seule fois -> chaque philo a un ptr sur elle
 	.go_on --> boolen pour savoir si on continue ou stop la simulation
 	.t0 : reference de depart de la simulation. On considere que ce timeval
-	represente la valeur 0 (un peu comme un epoch pour philo)
-
-Data->go_on
-	Maybe need of mutex on it? 
-	- used by each thread to start activity
-	- used by main thread for check_death and meal
+	represente la valeur 0 (== un epoch pour philo)
 
 Struct philo (utilisee en TABLEAU)
 	Contient les infos indiv de chaque philo + un ptr sur struct data.
@@ -42,17 +43,31 @@ Writing mutex (wutex)
 	signle mutex used to regulate acces to print timestamp
 	stored as apointer in data
 
+Meal mutex Mealtex (resp go_on mutex Gutex)
+	regulate acces to meal_nb and last_meal (resp go_on)
+
 Phtreadcreate failure
-	Si fail, j'appelle la fct qui detach et met tous les t_id a 0. Dans routine
-	il faudrait ensuite ne pas exec ceux avec t_id = 0. Sauf que t_id peut
-	valoir 0 car j'attache l'id apres la create (et lappel de la routine).
-	Ya des pb avec vlg et meme sans (grd nb de philo). 
+	Si fail, j'appelle la fct qui detach tous les threads deja cree, et met
+	go_on a False. La simulation ne continue pas, threading quitte, pas besoin
+	de join. Les philo malloces seront free via endfree dans main.
 
 Pas de "time_to_think" donne
 	On en calcul un "theorique" -> tt_think = tt_die - (tt_eat + tt_sleep)
-	Au demarrage, pour eviter que chaque philo prenne une fourchette (et que ca
-	bloque chacun de manger car personne n'a 2 fourchette) je vais faire thinker
-	la moitie des philo (pairs vs impairs)
+	NON -> le but etant de ne pas mourir et sans consigne concernant le think,
+	on ne fait pas penser les philo (juste un print sans usleep). J'etais ko
+	avec un temps de sleep court et nombre impairs car je faisais penser alors
+	que des pairs de fourchettes etaient deja dispo. 
+
+Launcher (threading, half_launcher, delay)
+	Pour synchroniser, a la creation des threads, on fait manger les philos
+	pairs, et penser les impairs. Mais avec un temps de think nul, on a des 
+	impairs qui passent devant des pairs (normal) et bloquent des fourchettes.
+	Je refuse de lancer des philos en decale, et je peux pas think.
+	Du coup technique ultime : lancer d'abord les pairs, puis les impairs. 
+	Neanmoins, toujours des imapirs qui passent devant. Du coup j'ai un delais
+	entre les deux lancements. Plus il y a de philos, puis les half_launcher
+	sont longs, moins il y a besoin de delais. On calcule un delay de 200 - nb 
+	mais en protegeant si jamais on me test avec > 200
 
 Simulation
 	3 actions : eat, sleep, think --> 3 fonctions
@@ -60,58 +75,44 @@ Simulation
 		eat -> sleep
 		sleep -> think
 		think -> eat
-	Philos pairs demarrent par eat
-	REGARDER QUI SONT LES + NOMBREUX (pairs ou impairs) ET FAIRE MANGER EN
-	PREMIER CEUX LA (prioriser le manger) ??
-	Philos impairs par think (tt_think? what if negative?)
-
-Actions
--eatp
-	check si la simul doit go_on
-	lock les futex 
-		{
-		futex left lock (idx = philo nb - 1)
-		print timestamp fork
-		si philo > 1
-			si philo_nb < total_philo
-				futex right lock (idx = philo nb)
-			else
-				futex right (idx = 0)
-			print timestamp fork
-		}
-	print timestamp eating
-	usleep(tt_eat)
-	unlock les futex (meme logique que lock)
--sleep
-	RAS : check go_on, print timestamp sleep, usleep tt_sleep
--think
-	check go_on
-	check tt_think >= 0
-	usleep tt_think ? only if >= 0 ? Or direclty go to eat? maybe think smthg 
-	like 70% of tt_think ? 
+	Philos pairs demarrent par eat, impairs par think
 
 Printer
 	wutex lock
 	printf (timestmp + philo_nb + msg) 
 	wutex unlock
-	--> pb d'opti? try itoa (v_int + v_unsigned long need) + strlen + write
-	--> mettre des couleurs (toutes diff nb_philo < 10, sinon on alterne)
+	7 couleurs differents
 
 Time mgmt
-	peut etre set data->t0 a bit later 
-	jouer sur les temps du syscal usleep pour voir si ft_usleep se comporte mieux (usec
-	trop long vs trop d'appels syscal usleep?)
+	usleep imprecis (>= vs =)
+	on sleep un gros chunk (90% du besoin)
+	et ensuite par petits chunks (2 microseconds dans mes test is good) tant
+	qu'on a pas atteint le besoin, en chakant l'horloge a chaque tour de boucle
+	sur ces 10 derniers %.
+	pb des tant de sleep longs : il faudrait checker go_on pendant les usleep.
+	cela demanderait de ne faire que des petits chunks, ce qui ralentit pas mal.
 
-LES CHECKERS (dans un thread != des philos?)
-- Check_Death : 1 philo meurt -> printdeath et stop simul
-	- Soit chaque philo verifie avant d'attaquer une activite (peut mourrir pendant 
-	qu'il dort ou sleep donc a checker aussi pdt les activites? bof)
-	- Soit dans un thread a part (main?), une fonction qui verifie pour tous les 
-	philos et frequemment (toutes les 10ms, moins?)
-	Doit direct print death
-	Doit direct modifier data->go_on
-- Check_Meals : all philos have eaten x times
-	Idem que check death sauf qu'il faut tous que tous les philos mangent x
-	fois. 
-	rien a print
-	Doit direct modifier data->go_on
+LES CHECKERS 
+(dans main thread)
+- Check_Death :
+	check le temps de mort pour tous les philos
+	set go_on to false si un est mort + print death
+- Check_Meals : 
+	check si tous les philos ont un meal_nb a 0
+	si oui, go_on == false
+(dans les actions)
+	Verifient go_on avant chaque demarage d'action ; return rien si == false
+	Un probleme : on verifie avant chaque demarage, mais pas pendant les 
+	actions et notamment les usleep. Si les temps sont long ca se voit a l'exec
+	: un died, plus rien ne s'ecrit mais le prompt n'est pas rendu direct.
+
+Lock des fourchettes (futex_lock)
+	appeler dans eating
+	check go on et return 0 si false
+	lock direct la fourchette de gauche 
+	si il n'y quun seul philo : return 1
+	si poly philo : va lock la fourchette nb (ou 0 si philo == nb) [lock order inversion ici mais deadlock impossible]
+	et return 2
+	ce return est utilise ensuite pour appeler fourchettes unlock (1 ou 2 forks?)
+	en fin de simul des philos peuvent toujours prendre des forks : on ne print
+	que si go_on, et futex_unlock sera bien appele ensuite avant de return. 
