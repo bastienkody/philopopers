@@ -69,7 +69,7 @@ void	end_free(t_philo **philo, t_data *data)
 	detach all already created philo : no need to join them
 	all philo will still be freed (via end_free in main)
 	set t_id of detach thread to 0 (most prob unecessary)
- 	*/
+*/
 void	phcreate_failure_mgmt(t_philo **philo, int i)
 {
 	int	j;

@@ -19,7 +19,7 @@ OBJS		=	${SRCS:%.c=$(BUILD_DIR)/%.o}
 
 NAME 		=	philo
 CC 			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -pthread -g3
+CFLAGS		=	-Wall -Wextra -Werror -pthread
 LDFLAGS 	=	-pthread
 # fsan		: -g in compile and + -fsanitize=thread in link
 

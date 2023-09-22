@@ -23,7 +23,6 @@ int	main(int argc, char **argv)
 	philo = init_philo(data);
 	if (!philo)
 		return (end_free(philo, data), 1);
-	print_data(data);
 	simulator(philo, argc);
 	return (end_free(philo, data), 0);
 }

@@ -51,6 +51,7 @@ int	check_death(t_philo **philo)
 	return (1);
 }
 
+/*	only called if meal_nb specified in argv	*/
 int	check_meal(t_philo **philo)
 {
 	int	i;
