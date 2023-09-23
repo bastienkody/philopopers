@@ -66,7 +66,7 @@ void	eating(t_philo *philo)
 		philo->meal_nb -= 1;
 		pthread_mutex_unlock(philo->data->mealtex);
 	}
-	ft_usleep(philo->data->tt_eat * 1000);
+	ft_usleep(philo->data->tt_eat * 1000, philo);
 	futex_unlock(philo, locked_fork_nb);
 	return (sleeping(philo));
 }
@@ -76,7 +76,7 @@ void	sleeping(t_philo *philo)
 	if (!check_go_on(philo))
 		return ;
 	ft_printer(c_time(philo->data->t0), philo->nb, S, philo->data->wutex);
-	ft_usleep(philo->data->tt_sleep * 1000);
+	ft_usleep(philo->data->tt_sleep * 1000, philo);
 	return (thinking(philo));
 }
 
