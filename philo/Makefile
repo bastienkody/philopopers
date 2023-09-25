@@ -37,7 +37,7 @@ ${NAME}:	${HEADER} ${OBJS}
 			@echo "Link complete for exec --> \033[4;36;1m${NAME}\033[0m"
 
 clean:
-			@rm -rf ${OBJS}
+			@rm -rf ${OBJS} ${BUILD_DIR}
 			@echo "\033[32m${NAME} obj cleaned\033[0m"
 
 fclean:		clean
