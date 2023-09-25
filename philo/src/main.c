@@ -17,6 +17,8 @@ int	main(int argc, char **argv)
 	t_philo			**philo;
 	t_data			*data;
 
+	if (argc == 6 && ft_atoi_noverflw(argv[5]) == 0)
+		return (0);
 	data = arg_to_data(argc, ++argv);
 	if (!data)
 		return (1);
