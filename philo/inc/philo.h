@@ -106,7 +106,7 @@ void					turn_go_on_to_false(t_philo *philo);
 int						ft_atoi_noverflw(const char *nptr);
 
 /*	time	*/
-void					ft_usleep(unsigned int usec);
+void					ft_usleep(unsigned int usec, t_philo *philo);
 unsigned long int		c_time(struct timeval t0);
 void					set_t0(t_data *data);
 

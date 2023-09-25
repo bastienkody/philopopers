@@ -21,10 +21,22 @@ unsigned long int	c_time(struct timeval t0)
 	return ((tmp.tv_sec - t0.tv_sec) * 1000000 + tmp.tv_usec - t0.tv_usec);
 }
 
-void	ft_usleep(unsigned int usec)
+/*	check simulation go_on while sleeping	*/
+void	big_usleep(unsigned int usec, t_philo *philo)
 {
 	struct timeval		tv_0;
 
+	gettimeofday(&tv_0, NULL);
+	while (check_go_on(philo) && c_time(tv_0) < usec)
+		usleep(1000);
+}
+
+void	ft_usleep(unsigned int usec, t_philo *philo)
+{
+	struct timeval		tv_0;
+
+	if (usec > 1000000)
+		return (big_usleep(usec, philo));
 	gettimeofday(&tv_0, NULL);
 	usleep(usec / 10 * 9);
 	while (c_time(tv_0) < usec)

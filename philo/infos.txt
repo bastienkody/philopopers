@@ -92,6 +92,9 @@ Time mgmt
 	sur ces 10 derniers %.
 	pb des temps de sleep longs : il faudrait checker go_on pendant les usleep.
 	cela demanderait de ne faire que des petits chunks, ce qui ralentit pas mal.
+	--> si le temps d'attente est long (>=1s), j'appelle une autre fonction ft_usleep
+	qui check go_on avant de lancer des usleep d'1ms. Ca marche nickel et ca ne
+	ralentit pas les autres tests. 
 
 LES CHECKERS (dans threading, le main thread)
 - Check_Death :
@@ -102,9 +105,7 @@ LES CHECKERS (dans threading, le main thread)
 	si oui, go_on == false
 (dans les actions)
 	Verifient go_on avant chaque demarage d'action ; return rien si == false
-	Un probleme : on verifie avant chaque demarage, mais pas pendant les 
-	actions et notamment les usleep. Si les temps sont long ca se voit a l'exec
-	: un died, plus rien ne s'ecrit mais le prompt n'est pas rendu direct.
+	Un probleme : on verifie avant chaque demarage et pendant les usleep longs.
 
 Lock des fourchettes (futex_lock)
 	appeler dans eating
@@ -121,4 +122,5 @@ Gestion des cas particuliers
 	- overflow ou nb negatif via atoi novflw dans arg to data
 	- 0 philo : init philo return null (se confond avec une erreur de malloc)
 	- 1 philo : on check que nb > 1 avant de prendre la fourchette de droite
-
+	- 0 min_meal : on check au debut du main et return direct
+	- temps d'attente/d'action long : on utilise un autre usleep pour check go_on
