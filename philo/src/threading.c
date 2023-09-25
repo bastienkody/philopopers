@@ -31,8 +31,8 @@ void	parity_launch_delay(t_philo *philo)
 	const int	delay = MAX_PHILO - philo->data->nb_philo;
 
 	if (delay > 0)
-		return (ft_usleep(delay));
-	ft_usleep(1);
+		return (ft_usleep(delay, philo));
+	ft_usleep(1, philo);
 }
 
 /*	parity:	0 -> even ;	1 -> odd	*/
@@ -66,7 +66,7 @@ void	simulator(t_philo **philo, int argc)
 		return ;
 	while (TRUE)
 	{
-		ft_usleep((*philo)->data->tt_die / 2);
+		ft_usleep((*philo)->data->tt_die / 2, *philo);
 		if (argc == 6 && !check_meal(philo))
 			break ;
 		if (!check_death(philo))
