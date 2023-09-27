@@ -66,7 +66,7 @@ void	simulator(t_philo **philo, int argc)
 		return ;
 	while (TRUE)
 	{
-		ft_usleep((*philo)->data->tt_die / 2, *philo);
+		ft_usleep(1000, *philo);
 		if (argc == 6 && !check_meal(philo))
 			break ;
 		if (!check_death(philo))
